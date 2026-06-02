@@ -1,0 +1,43 @@
+# ── Secrets & Environment ─────────────────────────────────────────────────────
+.env
+apps/**/.env
+
+# Keep example files in git
+!.env.example
+!apps/**/.env.example
+
+# ── Application Data ──────────────────────────────────────────────────────────
+/data/
+
+# AdGuard generates runtime state and hashed passwords here
+apps/adguard/work/
+apps/adguard/config/
+
+# Uncomment to keep Honey dashboard config out of git
+# apps/honey/config.json
+
+# ── Backups & Archives ────────────────────────────────────────────────────────
+backups/
+*.tar.gz
+*.zip
+*.bak
+
+# ── Database & Logs ───────────────────────────────────────────────────────────
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.log
+*.pid
+
+# ── OS & Editor ───────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo

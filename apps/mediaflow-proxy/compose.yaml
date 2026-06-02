@@ -1,0 +1,28 @@
+services:
+  mediaflow-proxy:
+    image: ghcr.io/mhdzumair/mediaflow-proxy-light:latest
+    container_name: mediaflow-proxy
+    restart: unless-stopped
+    expose:
+      - "8888"
+    environment:
+      - TZ=${TZ:-UTC}
+      - APP__AUTH__API_PASSWORD=${MEDIAFLOW_API_PASSWORD}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8888/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    stop_grace_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 96M
+        reservations:
+          memory: 32M

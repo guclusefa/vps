@@ -1,0 +1,30 @@
+services:
+  zublo:
+    image: ghcr.io/danielalves96/zublo:latest
+    container_name: zublo
+    restart: unless-stopped
+    expose:
+      - "9597"
+    volumes:
+      - ${DOCKER_DATA_DIR}/zublo:/pb/pb_data
+    environment:
+      - TZ=${TZ:-UTC}
+      - PB_ENCRYPTION_KEY=${ZUBLO_PB_ENCRYPTION_KEY}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9597/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    stop_grace_period: 5s
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+        reservations:
+          memory: 16M

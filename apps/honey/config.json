@@ -1,0 +1,61 @@
+{
+	"ui": {
+		"name": "cestfa",
+		"desc": "mes applications auto-hébergées",
+		"icon": "img/icon.png",
+		"wallpaper": "img/background.jpg",
+		"wallpaper_dark": "img/background-dark.jpg",
+		"dark_mode": "Auto",
+		"open_new_tab": true,
+		"ping_dots": false,
+		"blur": true,
+		"animations": true,
+		"trusted_domains": [
+			"cestfa.app"
+		]
+	},
+	"services": [
+		{
+			"name": "AdGuard Home",
+			"desc": "Protection DNS à l'échelle du réseau, blocage des publicités et du pistage.",
+			"href": "https://adguard.cestfa.app",
+			"icon": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/adguard-home.png"
+		},
+		{
+			"name": "Beszel",
+			"desc": "Tableau de bord léger de surveillance des ressources du serveur et des conteneurs.",
+			"href": "https://beszel.cestfa.app",
+			"icon": "https://raw.githubusercontent.com/henrygd/beszel/refs/heads/main/internal/site/public/static/icon.png"
+		},
+		{
+			"name": "Dispatcharr",
+			"desc": "Routeur de flux de listes de lecture IPTV et gestionnaire de proxy.",
+			"href": "https://dispatcharr.cestfa.app",
+			"icon": "https://raw.githubusercontent.com/Dispatcharr/Dispatcharr/refs/heads/main/frontend/public/logo.png"
+		},
+		{
+			"name": "Filebrowser",
+			"desc": "Gestionnaire de fichiers web léger pour administrer la configuration de la stack.",
+			"href": "https://files.cestfa.app",
+			"icon": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/filebrowser.png"
+		},
+		{
+			"name": "Ghostfolio",
+			"desc": "Logiciel de gestion de patrimoine open-source pour le suivi des actifs financiers.",
+			"href": "https://ghostfolio.cestfa.app",
+			"icon": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/ghostfolio.png"
+		},
+		{
+			"name": "MediaFlow Proxy",
+			"desc": "Serveur proxy d'arête haute performance pour les flux multimédias Debrid en temps réel.",
+			"href": "https://mediaflow.cestfa.app",
+			"icon": "https://raw.githubusercontent.com/mhdzumair/mediaflow-proxy/refs/heads/main/mediaflow_proxy/static/logo.png"
+		},
+		{
+			"name": "Zublo",
+			"desc": "Gestionnaire d'abonnements pour suivre tous les paiements récurrents en un seul endroit.",
+			"href": "https://zublo.cestfa.app",
+			"icon": "https://raw.githubusercontent.com/danielalves96/zublo/refs/heads/main/apps/web/public/icon-512.png"
+		}
+	]
+}

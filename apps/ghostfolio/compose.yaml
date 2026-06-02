@@ -1,0 +1,90 @@
+services:
+  ghostfolio:
+    image: ghostfolio/ghostfolio:latest
+    container_name: ghostfolio
+    restart: unless-stopped
+    expose:
+      - "3333"
+    environment:
+      - TZ=${TZ:-UTC}
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://ghostfolio:${GHOSTFOLIO_POSTGRES_PASSWORD}@ghostfolio-db:5432/ghostfolio?sslmode=disable
+      - REDIS_HOST=ghostfolio-redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${GHOSTFOLIO_REDIS_PASSWORD}
+      - ACCESS_TOKEN_SALT=${GHOSTFOLIO_ACCESS_TOKEN_SALT}
+      - JWT_SECRET_KEY=${GHOSTFOLIO_JWT_SECRET_KEY}
+    depends_on:
+      ghostfolio-db:
+        condition: service_healthy
+      ghostfolio-redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3333/api/v1/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    stop_grace_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+        reservations:
+          memory: 64M
+
+  ghostfolio-db:
+    image: postgres:15-alpine
+    container_name: ghostfolio-db
+    restart: unless-stopped
+    volumes:
+      - ${DOCKER_DATA_DIR}/ghostfolio/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=ghostfolio
+      - POSTGRES_USER=ghostfolio
+      - POSTGRES_PASSWORD=${GHOSTFOLIO_POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ghostfolio"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    stop_grace_period: 15s
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+        reservations:
+          memory: 16M
+
+  ghostfolio-redis:
+    image: redis:alpine
+    container_name: ghostfolio-redis
+    restart: unless-stopped
+    command: redis-server --requirepass ${GHOSTFOLIO_REDIS_PASSWORD} --maxmemory 24mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${GHOSTFOLIO_REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    stop_grace_period: 5s
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    deploy:
+      resources:
+        limits:
+          memory: 32M
+        reservations:
+          memory: 8M

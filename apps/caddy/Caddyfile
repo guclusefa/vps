@@ -1,0 +1,32 @@
+{$ADGUARD_HOSTNAME} {
+    # NOTE: Set to adguard:3000 during the first execution wizard, then update to adguard:80
+    reverse_proxy adguard:80
+}
+
+{$BESZEL_HOSTNAME} {
+    reverse_proxy beszel:8090
+}
+
+{$DISPATCHARR_HOSTNAME} {
+    reverse_proxy dispatcharr:9191
+}
+
+{$FILEBROWSER_HOSTNAME} {
+    reverse_proxy filebrowser:80
+}
+
+{$GHOSTFOLIO_HOSTNAME} {
+    reverse_proxy ghostfolio:3333
+}
+
+{$HONEY_HOSTNAME} {
+    reverse_proxy honey:4173
+}
+
+{$MEDIAFLOW_PROXY_HOSTNAME} {
+    reverse_proxy mediaflow-proxy:8888
+}
+
+{$ZUBLO_HOSTNAME} {
+    reverse_proxy zublo:9597
+}

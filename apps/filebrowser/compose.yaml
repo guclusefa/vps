@@ -1,0 +1,31 @@
+services:
+  filebrowser:
+    image: filebrowser/filebrowser:v2-alpine
+    container_name: filebrowser
+    restart: unless-stopped
+    expose:
+      - "80"
+    environment:
+      - TZ=${TZ:-UTC}
+    command: -d /config/filebrowser.db -p 80
+    volumes:
+      - /opt:/srv
+      - ${DOCKER_DATA_DIR}/filebrowser:/config
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    stop_grace_period: 5s
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    deploy:
+      resources:
+        limits:
+          memory: 32M
+        reservations:
+          memory: 8M

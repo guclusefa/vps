@@ -1,0 +1,42 @@
+services:
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ${DOCKER_DATA_DIR}/caddy/data:/data
+      - ${DOCKER_DATA_DIR}/caddy/config:/config
+    environment:
+      - TZ=${TZ:-UTC}
+      - DOMAIN=${DOMAIN}
+      - ADGUARD_HOSTNAME=${ADGUARD_HOSTNAME}
+      - BESZEL_HOSTNAME=${BESZEL_HOSTNAME}
+      - DISPATCHARR_HOSTNAME=${DISPATCHARR_HOSTNAME}
+      - FILEBROWSER_HOSTNAME=${FILEBROWSER_HOSTNAME}
+      - GHOSTFOLIO_HOSTNAME=${GHOSTFOLIO_HOSTNAME}
+      - HONEY_HOSTNAME=${HONEY_HOSTNAME}
+      - MEDIAFLOW_PROXY_HOSTNAME=${MEDIAFLOW_PROXY_HOSTNAME}
+      - ZUBLO_HOSTNAME=${ZUBLO_HOSTNAME}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    stop_grace_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 32M
