@@ -22,12 +22,6 @@ services:
       - HONEY_HOSTNAME=${HONEY_HOSTNAME}
       - MEDIAFLOW_PROXY_HOSTNAME=${MEDIAFLOW_PROXY_HOSTNAME}
       - ZUBLO_HOSTNAME=${ZUBLO_HOSTNAME}
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:80"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
     stop_grace_period: 10s
     logging:
       driver: json-file
