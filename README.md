@@ -7,7 +7,7 @@ A single `.env` file drives the entire stack. Optimized for 2 GB RAM VPS.
 | Container | Purpose | URL | Limit |
 |---|---|---|---|
 | Caddy | Reverse proxy + TLS | — | 128M |
-| AdGuard Home | DNS + ad blocking | `adguard.$DOMAIN` | 128M |
+| AdGuard Home | DNS + ad blocking | `adguard.$DOMAIN` | 192M |
 | Beszel | Resource monitoring | `beszel.$DOMAIN` | 64M |
 | Beszel Agent | Metrics collector | — | 64M |
 | Dispatcharr | Stream management | `dispatcharr.$DOMAIN` | 768M |

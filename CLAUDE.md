@@ -63,7 +63,7 @@ Total hard limit: **1936M** across all 13 containers. The ceiling is kept under 
 | Container | Limit |
 |---|---|
 | Caddy | 128M |
-| AdGuard Home | 128M |
+| AdGuard Home | 192M |
 | Beszel | 64M |
 | Beszel Agent | 64M |
 | Dispatcharr | 768M |
@@ -75,7 +75,7 @@ Total hard limit: **1936M** across all 13 containers. The ceiling is kept under 
 | MediaFlow Proxy | 96M |
 | Watchtower | 64M |
 | Zublo | 64M |
-| **Total** | **1936M** |
+| **Total** | **2000M** |
 
 Do not raise a limit without verifying the running total stays under ~1950M.
 Dispatcharr is capped at 768M — optimized by mounting a custom `uwsgi.ini` and `redis.conf`.
