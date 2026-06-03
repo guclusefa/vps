@@ -25,13 +25,13 @@
 			"name": "AIOMetadata",
 			"desc": "Générateur et enrichisseur de métadonnées et de catalogues pour Stremio.",
 			"href": "https://aiometadata.cestfa.app",
-			"icon": "https://raw.githubusercontent.com/cedya77/aiometadata/refs/heads/main/configure/public/favicon.ico"
+			"icon": "https://raw.githubusercontent.com/cedya77/aiometadata/refs/heads/dev/public/logo.png"
 		},
 		{
 			"name": "AIOStreams",
 			"desc": "Agrégateur et gestionnaire de flux Stremio tout-en-un avec filtrage et tri avancé.",
 			"href": "https://aiostreams.cestfa.app",
-			"icon": "https://raw.githubusercontent.com/Viren070/AIOStreams/main/packages/frontend/public/favicon.ico"
+			"icon": "https://raw.githubusercontent.com/Viren070/AIOStreams/refs/heads/main/packages/docs/public/logo.png"
 		},
 		{
 			"name": "Beszel",

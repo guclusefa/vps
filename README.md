@@ -1,30 +1,6 @@
 # VPS Stack
 
-Self-hosted Docker stack for a 2 GB VPS. One `.env` file drives everything.
-
-## Services
-
-| Container | Purpose | URL |
-|---|---|---|
-| Caddy | Reverse proxy + TLS | — |
-| AdGuard Home | DNS + ad blocking | `adguard.$DOMAIN` |
-| AIOMetadata | Stremio catalog enrichment | `aiometadata.$DOMAIN` |
-| AIOMetadata Cache | Redis backing for AIOMetadata | — |
-| AIOStreams | Stremio addon aggregator | `aiostreams.$DOMAIN` |
-| Beszel | Resource monitoring | `beszel.$DOMAIN` |
-| Beszel Agent | Host metrics collector | — |
-| Dispatcharr | IPTV stream management | `dispatcharr.$DOMAIN` |
-| Filebrowser | Web file manager | `files.$DOMAIN` |
-| Ghostfolio | Portfolio tracker | `ghostfolio.$DOMAIN` |
-| Ghostfolio DB | PostgreSQL database for Ghostfolio | — |
-| Ghostfolio Cache | Redis caching for Ghostfolio | — |
-| Honey | Dashboard | `$DOMAIN` |
-| MediaFlow Proxy | Debrid media proxy | `mediaflow.$DOMAIN` |
-| Warp | Cloudflare proxy for MediaFlow | — |
-| Watchtower | Auto-updates | — |
-| Zublo | Subscription tracker | `zublo.$DOMAIN` |
-
----
+Self-hosted Docker stack for a low resource VPS, with Caddy reverse proxy and automatic TLS. Services include AdGuard Home, Stremio addons, a portfolio tracker, and more. A single `.env` file configures the entire stack. Designed for easy deployment and management on a 1 vCPU, 2 GB RAM VPS.
 
 ## Setup
 
@@ -106,6 +82,7 @@ docker compose up -d
 ```
 
 Open `https://adguard.$DOMAIN` and complete the wizard. Set:
+
 - **Web interface port:** `80`
 - **DNS server port:** `53`
 
@@ -130,7 +107,7 @@ After first launch:
 
 ### 5. AdGuard DNS-over-TLS (optional)
 
-Enables `adguard.$DOMAIN` as a Private DNS provider on mobile.
+Enables `adguard.$DOMAIN` as a Private DNS provider.
 
 In AdGuard → **Settings → Encryption settings**:
 
@@ -140,12 +117,6 @@ In AdGuard → **Settings → Encryption settings**:
 | Server name | `adguard.$DOMAIN` |
 | Certificate path | `/etc/caddy-certs/caddy/certificates/acme-v02.api.letsencrypt.org-directory/adguard.$DOMAIN/adguard.$DOMAIN.crt` |
 | Private key path | `/etc/caddy-certs/caddy/certificates/acme-v02.api.letsencrypt.org-directory/adguard.$DOMAIN/adguard.$DOMAIN.key` |
-
-On your phone:
-- **Android:** Settings → Private DNS → enter `adguard.$DOMAIN`
-- **iOS:** AdGuard UI → Setup Guide → install DNS profile
-
-> Run `find /opt/docker/data/caddy/data -name "*.crt"` to confirm the exact certificate path on your server.
 
 ---
 

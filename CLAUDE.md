@@ -4,31 +4,32 @@ Context and conventions for AI-assisted work on this repo.
 
 ## What this repo is
 
-A self-hosted Docker stack for a personal VPS (DigitalOcean, 1 vCPU, 2 GB RAM).
+A self-hosted Docker stack for a personal VPS (optimized for low specs and minimal maintenance).
 All services run behind Caddy (reverse proxy + automatic TLS).
 One `.env` file drives the entire stack.
 
 ## Stack
 
-| Service | Image | Role |
-|---|---|---|
-| Caddy | `caddy:latest` | Reverse proxy, TLS |
-| AdGuard Home | `adguard/adguardhome:latest` | DNS + ad blocking |
-| AIOMetadata | `ghcr.io/cedya77/aiometadata:latest` | Stremio catalog & metadata generator |
-| AIOMetadata Cache | `redis:alpine` | Redis for AIOMetadata |
-| AIOStreams | `ghcr.io/viren070/aiostreams:latest`| Stremio addon aggregator |
-| Beszel | `henrygd/beszel:latest` | Monitoring dashboard |
-| Beszel Agent | `henrygd/beszel-agent:latest` | Host metrics (`network_mode: host`) |
-| Dispatcharr | `ghcr.io/dispatcharr/dispatcharr:latest` | IPTV stream management |
-| Filebrowser | `filebrowser/filebrowser:v2-alpine` | Web file manager (serves `/opt`) |
-| Ghostfolio | `ghostfolio/ghostfolio:latest` | Portfolio tracker |
-| Ghostfolio DB | `postgres:15-alpine` | Postgres for Ghostfolio |
-| Ghostfolio Cache | `redis:alpine` | Redis for Ghostfolio |
-| Honey | `ghcr.io/dani3l0/honey:latest` | Dashboard / start page |
-| MediaFlow Proxy | `ghcr.io/mhdzumair/mediaflow-proxy-light:latest` | Debrid media proxy |
-| Warp | `caomingjun/warp:latest` | Cloudflare HTTP proxy for MediaFlow |
-| Watchtower | `nickfedor/watchtower:latest` | Auto image updates |
-| Zublo | `ghcr.io/danielalves96/zublo:latest` | Subscription tracker |
+| Service | Image | Role | Limit |
+|---|---|---|---|
+| Caddy | `caddy:latest` | Reverse proxy, TLS | 128M |
+| AdGuard Home | `adguard/adguardhome:latest` | DNS + ad blocking | 192M |
+| AIOMetadata | `ghcr.io/cedya77/aiometadata:latest` | Stremio catalog & metadata generator | 256M |
+| AIOMetadata Cache | `redis:alpine` | Redis for AIOMetadata | 32M |
+| AIOStreams | `ghcr.io/viren070/aiostreams:latest`| Stremio addon aggregator | 448M |
+| Beszel | `henrygd/beszel:latest` | Monitoring dashboard | 64M |
+| Beszel Agent | `henrygd/beszel-agent:latest` | Host metrics (`network_mode: host`) | 64M |
+| Dispatcharr | `ghcr.io/dispatcharr/dispatcharr:latest` | IPTV stream management | 768M |
+| Filebrowser | `filebrowser/filebrowser:v2-alpine` | Web file manager (serves `/opt`) | 32M |
+| Ghostfolio | `ghostfolio/ghostfolio:latest` | Portfolio tracker | 384M |
+| Ghostfolio DB | `postgres:15-alpine` | Postgres for Ghostfolio | 64M |
+| Ghostfolio Cache | `redis:alpine` | Redis for Ghostfolio | 32M |
+| Honey | `ghcr.io/dani3l0/honey:latest` | Dashboard / start page | 48M |
+| MediaFlow Proxy | `ghcr.io/mhdzumair/mediaflow-proxy-light:latest` | Debrid media proxy | 96M |
+| Warp | `caomingjun/warp:latest` | Cloudflare HTTP proxy for MediaFlow | 64M |
+| Watchtower | `nickfedor/watchtower:latest` | Auto image updates | 64M |
+| Zublo | `ghcr.io/danielalves96/zublo:latest` | Subscription tracker | 64M |
+| **Total** |  |  | **2856M** |
 
 ## Repo structure
 
@@ -59,31 +60,6 @@ Only Caddy and AdGuard expose host ports (`80`, `443`, `53`, `853`). All other s
 Beszel Agent uses `network_mode: host` and communicates with the hub via a Unix socket volume (`beszel-socket`).
 
 **Never define a separate network inside a per-app compose fragment.** Everything shares `vps_network` via the root compose default.
-
-## Memory budget
-
-Hard limits across all 14 containers.
-
-| Container | Limit |
-|---|---|
-| Caddy | 128M |
-| AdGuard Home | 192M |
-| AIOMetadata | 256M |
-| AIOMetadata Cache | 32M |
-| AIOStreams | 448M |
-| Beszel | 64M |
-| Beszel Agent | 64M |
-| Dispatcharr | 768M |
-| Filebrowser | 32M |
-| Ghostfolio | 384M |
-| Ghostfolio DB | 64M |
-| Ghostfolio Cache | 32M |
-| Honey | 48M |
-| MediaFlow Proxy | 96M |
-| Warp | 64M |
-| Watchtower | 64M |
-| Zublo | 64M |
-| **Total** | **2856M** |
 
 ## MediaFlow + Warp
 
@@ -119,7 +95,6 @@ Warp lives in `apps/warp/` as a standalone service. MediaFlow depends on it but 
 - `ports:` on internal services
 - Separate networks in per-app compose files
 - Raising `gevent` above 50
-- A second Redis container (Dispatcharr embeds its own)
 - Docker socket mounted read-write except on Watchtower
 - Data persisted inside containers
 
