@@ -73,15 +73,6 @@ MediaFlow routes all traffic through Warp (`caomingjun/warp`) so debrid add-ons 
 
 Warp lives in `apps/warp/` as a standalone service. MediaFlow depends on it but they are separate compose fragments.
 
-## Dispatcharr
-
-- AIO mode (`DISPATCHARR_ENV=aio`): Redis + Celery + Daphne + uWSGI in one container
-- `uwsgi.ini` → mounted at `/app/docker/uwsgi.ini`
-- `redis.conf` → mounted at `/etc/dispatcharr/redis.conf` (64M cap, LRU, no persistence)
-- `workers = 1` is intentional — raising to 2 adds ~150M
-- `post-buffering = 0` is required for IPTV streaming — do not change
-- `gevent = 100` — do not raise without profiling
-
 ## Conventions
 
 - All compose files define `deploy.resources.limits` + `reservations`, `stop_grace_period`, and `logging`
@@ -94,7 +85,6 @@ Warp lives in `apps/warp/` as a standalone service. MediaFlow depends on it but 
 
 - `ports:` on internal services
 - Separate networks in per-app compose files
-- Raising `gevent` above 100
 - Docker socket mounted read-write except on Watchtower
 - Data persisted inside containers
 

@@ -7,8 +7,6 @@ services:
       - "9191"
     volumes:
       - ${DOCKER_DATA_DIR}/dispatcharr:/data
-      - ./uwsgi.ini:/app/docker/uwsgi.ini:ro
-      - ./redis.conf:/etc/dispatcharr/redis.conf:ro
     environment:
       - TZ=${TZ:-UTC}
       - DISPATCHARR_ENV=aio
