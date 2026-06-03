@@ -1,3 +1,4 @@
+services:
   beszel:
     image: henrygd/beszel:latest
     container_name: beszel
