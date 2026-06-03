@@ -10,6 +10,7 @@ services:
     environment:
       - TZ=${TZ:-UTC}
       - HOST_NAME=https://${AIOMETADATA_HOSTNAME}
+      - DATABASE_URI=sqlite:///app/addon/data/db.sqlite
       - REDIS_URL=redis://:${GHOSTFOLIO_REDIS_PASSWORD}@ghostfolio-redis:6379/1
       - NODE_OPTIONS=--max-old-space-size=192
     depends_on:
