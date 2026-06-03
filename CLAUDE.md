@@ -19,7 +19,7 @@ One `.env` file drives the entire stack.
 | AIOStreams | `ghcr.io/viren070/aiostreams:latest`| Stremio addon aggregator | 448M |
 | Beszel | `henrygd/beszel:latest` | Monitoring dashboard | 64M |
 | Beszel Agent | `henrygd/beszel-agent:latest` | Host metrics (`network_mode: host`) | 64M |
-| Dispatcharr | `ghcr.io/dispatcharr/dispatcharr:latest` | IPTV stream management | 768M |
+| Dispatcharr | `ghcr.io/dispatcharr/dispatcharr:latest` | IPTV stream management | 1024M |
 | Filebrowser | `filebrowser/filebrowser:v2-alpine` | Web file manager (serves `/opt`) | 32M |
 | Ghostfolio | `ghostfolio/ghostfolio:latest` | Portfolio tracker | 384M |
 | Ghostfolio DB | `postgres:15-alpine` | Postgres for Ghostfolio | 64M |
@@ -29,7 +29,7 @@ One `.env` file drives the entire stack.
 | Warp | `caomingjun/warp:latest` | Cloudflare HTTP proxy for MediaFlow | 64M |
 | Watchtower | `nickfedor/watchtower:latest` | Auto image updates | 64M |
 | Zublo | `ghcr.io/danielalves96/zublo:latest` | Subscription tracker | 64M |
-| **Total** |  |  | **2856M** |
+| **Total** |  |  | **3200M** |
 
 ## Repo structure
 
@@ -80,7 +80,7 @@ Warp lives in `apps/warp/` as a standalone service. MediaFlow depends on it but 
 - `redis.conf` → mounted at `/etc/dispatcharr/redis.conf` (64M cap, LRU, no persistence)
 - `workers = 1` is intentional — raising to 2 adds ~150M
 - `post-buffering = 0` is required for IPTV streaming — do not change
-- `gevent = 50` — do not raise without profiling
+- `gevent = 100` — do not raise without profiling
 
 ## Conventions
 
@@ -94,7 +94,7 @@ Warp lives in `apps/warp/` as a standalone service. MediaFlow depends on it but 
 
 - `ports:` on internal services
 - Separate networks in per-app compose files
-- Raising `gevent` above 50
+- Raising `gevent` above 100
 - Docker socket mounted read-write except on Watchtower
 - Data persisted inside containers
 
