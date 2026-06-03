@@ -66,7 +66,7 @@ Hard limits across all 14 containers. Keep total under ~2000M.
 |---|---|
 | Caddy | 128M |
 | AdGuard Home | 192M |
-| AIOStreams | 192M |
+| AIOStreams | 448M |
 | Beszel | 64M |
 | Beszel Agent | 64M |
 | Dispatcharr | 768M |
@@ -79,7 +79,7 @@ Hard limits across all 14 containers. Keep total under ~2000M.
 | Warp | 64M |
 | Watchtower | 64M |
 | Zublo | 64M |
-| **Total** | **2260M** |
+| **Total** | **2516M** |
 
 ## MediaFlow + Warp
 
