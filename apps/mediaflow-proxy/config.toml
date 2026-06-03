@@ -6,5 +6,5 @@ port = 8888
 proxy_url = ""
 
 [proxy.transport_routes]
-"https://torrentio.strem.fun" = { proxy = true, proxy_url = "http://warp:1080", verify_ssl = true }
-"https://sooti.click" = { proxy = true, proxy_url = "http://warp:1080", verify_ssl = true }
+"all://*.strem.fun" = { proxy = true, proxy_url = "http://warp:1080", verify_ssl = true }
+"all://sooti.click" = { proxy = true, proxy_url = "http://warp:1080", verify_ssl = true }
