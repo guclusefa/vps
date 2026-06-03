@@ -12,7 +12,7 @@ services:
       - /opt:/srv
       - ${DOCKER_DATA_DIR}/filebrowser:/config
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:80/health"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:80/health"]
       interval: 30s
       timeout: 5s
       retries: 3
