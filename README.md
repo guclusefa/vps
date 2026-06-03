@@ -1,44 +1,37 @@
-# VPS Self-Hosted Stack
+# VPS Stack
 
-A single `.env` file drives the entire stack. Optimized for 2 GB RAM VPS.
+Self-hosted Docker stack for a 2 GB VPS. One `.env` file drives everything.
 
-## Services & Memory Limits
+## Services
 
-| Container | Purpose | URL | Limit |
-|---|---|---|---|
-| Caddy | Reverse proxy + TLS | — | 128M |
-| AdGuard Home | DNS + ad blocking | `adguard.$DOMAIN` | 192M |
-| Beszel | Resource monitoring | `beszel.$DOMAIN` | 64M |
-| Beszel Agent | Metrics collector | — | 64M |
-| Dispatcharr | Stream management | `dispatcharr.$DOMAIN` | 768M |
-| Filebrowser | Web file manager | `files.$DOMAIN` | 32M |
-| Ghostfolio | Portfolio tracker | `ghostfolio.$DOMAIN` | 384M |
-| Ghostfolio DB | Postgres storage | — | 64M |
-| Ghostfolio Cache | Redis cache | — | 32M |
-| Honey | Dashboard | `$DOMAIN` | 48M |
-| MediaFlow Proxy | Debrid media proxy | `mediaflow.$DOMAIN` | 96M |
-| Watchtower | Auto-updates | — | 64M |
-| Zublo | Finance tracker | `zublo.$DOMAIN` | 64M |
-| **Total** | | | **1936M** |
-
-Real-world usage sits around 750–1050M. The gap gives headroom for traffic spikes without OOM kills.
+| Container | Purpose | URL |
+|---|---|---|
+| Caddy | Reverse proxy + TLS | — |
+| AdGuard Home | DNS + ad blocking | `adguard.$DOMAIN` |
+| Beszel | Resource monitoring | `beszel.$DOMAIN` |
+| Beszel Agent | Host metrics collector | — |
+| Dispatcharr | IPTV stream management | `dispatcharr.$DOMAIN` |
+| Filebrowser | Web file manager | `files.$DOMAIN` |
+| Ghostfolio | Portfolio tracker | `ghostfolio.$DOMAIN` |
+| Honey | Dashboard | `$DOMAIN` |
+| MediaFlow Proxy | Debrid media proxy | `mediaflow.$DOMAIN` |
+| Warp | Cloudflare proxy for MediaFlow | — |
+| Watchtower | Auto-updates | — |
+| Zublo | Subscription tracker | `zublo.$DOMAIN` |
 
 ---
 
-## 1. Host Preparation
+## Setup
+
+### 1. Host preparation
 
 ```bash
-# Update and install prerequisites
 sudo apt-get update && sudo apt-get install -y curl git
-
-# Install Docker
 curl -fsSL https://get.docker.com | sudo sh
-
-# Add your user to the docker group (re-login after this)
 sudo usermod -aG docker $USER
 ```
 
-### Free port 53 for AdGuard
+**Free port 53 for AdGuard:**
 
 ```bash
 sudo systemctl stop systemd-resolved
@@ -46,126 +39,108 @@ sudo systemctl disable systemd-resolved
 echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf
 ```
 
-### Swap (required on 2 GB VPS)
+**Swap (required on 2 GB VPS):**
 
 ```bash
 sudo fallocate -l 2G /swapfile
 sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
+sudo mkswap /swapfile && sudo swapon /swapfile
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
-
-# Reduce swap aggressiveness (keep hot data in RAM)
-echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
-sudo sysctl -p
+echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 ```
 
-### System tuning
+**System tuning:**
 
 ```bash
-# Avoid false OOM kills from overcommit accounting
-echo 'vm.overcommit_memory=1' | sudo tee -a /etc/sysctl.conf
-sudo sysctl -p
+echo 'vm.overcommit_memory=1' | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
-# Cap journald size (prevents log creep on low-disk VPS)
 sudo mkdir -p /etc/systemd/journald.conf.d
 printf '[Journal]\nSystemMaxUse=100M\nRuntimeMaxUse=50M\n' | \
   sudo tee /etc/systemd/journald.conf.d/size.conf
 sudo systemctl restart systemd-journald
 ```
 
-### Docker log rotation
-
-Cap container log size at the daemon level so it applies to every container automatically:
+**Docker log rotation:**
 
 ```bash
-sudo tee /etc/docker/daemon.json > /dev/null <<'DAEMON'
-{
-  "log-driver": "json-file",
-  "log-opts": {
-    "max-size": "10m",
-    "max-file": "3"
-  }
-}
-DAEMON
+sudo cp daemon.json /etc/docker/daemon.json
 sudo systemctl restart docker
 ```
 
-> Each compose file also sets `logging:` per-service as a belt-and-suspenders fallback.
-
 ---
 
-## 2. Clone & Configure
+### 2. Configure
 
 ```bash
 sudo git clone https://github.com/guclusefa/vps.git /opt/docker
 sudo chown -R $USER:$USER /opt/docker
 cd /opt/docker
-
 cp .env.example .env
-nano .env  # Fill in your domain, passwords, and paths
 ```
 
-Generate secrets before starting:
+Edit `.env` and fill in your domain and secrets. Generate each secret with:
 
 ```bash
-# Ghostfolio and Zublo each need a unique secret
-openssl rand -hex 32  # repeat for each key — do not reuse the same value
+openssl rand -hex 32
 ```
-
-Paste the output into `GHOSTFOLIO_ACCESS_TOKEN_SALT`, `GHOSTFOLIO_JWT_SECRET_KEY`, and `ZUBLO_PB_ENCRYPTION_KEY` in `.env`.
 
 ---
 
-## 3. First Launch (AdGuard setup wizard)
+### 3. First launch
 
-AdGuard uses port 3000 for its initial setup wizard. Temporarily point Caddy to it:
+AdGuard's setup wizard runs on port `3000`. Before starting, open `apps/caddy/Caddyfile` and temporarily change the AdGuard line:
+
+```
+reverse_proxy adguard:3000
+```
+
+Start the stack:
 
 ```bash
-# In apps/caddy/Caddyfile, set AdGuard to port 3000:
-#   reverse_proxy adguard:3000
-
 docker compose up -d
 ```
 
-Then open `https://adguard.$DOMAIN` and complete the wizard:
+Open `https://adguard.$DOMAIN` and complete the wizard. Set:
 - **Web interface port:** `80`
 - **DNS server port:** `53`
 
----
-
-## 4. Production Lockdown
-
-Once the AdGuard wizard is done, switch Caddy back to port 80:
+Once done, restore the Caddyfile to `adguard:80` and reload:
 
 ```bash
-# In apps/caddy/Caddyfile, restore:
-#   reverse_proxy adguard:80
-
 docker compose exec -w /etc/caddy caddy caddy reload
 ```
 
 ---
 
-## 5. Beszel Setup (monitoring)
+### 4. Beszel agent
 
-Beszel requires a one-time step to connect the agent after first launch.
+After first launch:
 
-1. Open `https://beszel.$DOMAIN` and create your admin account.
-2. Click **Add System** — the UI will show you a `KEY` and `TOKEN`.
-3. Copy them into your `.env`:
-```env
-BESZEL_AGENT_KEY=<key from UI>
-BESZEL_AGENT_TOKEN=<token from UI>
-```
-4. Restart the agent:
-```bash
-docker compose up -d beszel-agent
-```
-5. Back in the UI, set **Host / IP** to:
-```
-/beszel_socket/beszel.sock
-```
+1. Open `https://beszel.$DOMAIN` → create admin account → **Add System**
+2. Copy the `KEY` and `TOKEN` into `.env`
+3. Restart the agent: `docker compose up -d beszel-agent`
+4. Set **Host / IP** to `/beszel_socket/beszel.sock`
+
+---
+
+### 5. AdGuard DNS-over-TLS (optional)
+
+Enables `adguard.$DOMAIN` as a Private DNS provider on mobile.
+
+In AdGuard → **Settings → Encryption settings**:
+
+| Field | Value |
+|---|---|
+| Enable encryption | ✓ |
+| Server name | `adguard.$DOMAIN` |
+| Certificate path | `/etc/caddy-certs/caddy/certificates/acme-v02.api.letsencrypt.org-directory/adguard.$DOMAIN/adguard.$DOMAIN.crt` |
+| Private key path | `/etc/caddy-certs/caddy/certificates/acme-v02.api.letsencrypt.org-directory/adguard.$DOMAIN/adguard.$DOMAIN.key` |
+
+On your phone:
+- **Android:** Settings → Private DNS → enter `adguard.$DOMAIN`
+- **iOS:** AdGuard UI → Setup Guide → install DNS profile
+
+> Run `find /opt/docker/data/caddy/data -name "*.crt"` to confirm the exact certificate path on your server.
 
 ---
 
@@ -175,5 +150,3 @@ docker compose up -d beszel-agent
 docker compose ps
 docker stats --no-stream
 ```
-
-Healthy output: all containers `Up (healthy)` where applicable, no container near its memory limit, Dispatcharr below 700M.

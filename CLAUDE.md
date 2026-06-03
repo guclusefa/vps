@@ -5,60 +5,61 @@ Context and conventions for AI-assisted work on this repo.
 ## What this repo is
 
 A self-hosted Docker stack for a personal VPS (DigitalOcean, 1 vCPU, 2 GB RAM).
-All services live behind Caddy (reverse proxy + automatic TLS via DuckDNS).
+All services run behind Caddy (reverse proxy + automatic TLS).
 One `.env` file drives the entire stack.
 
-## Stack overview
+## Stack
 
 | Service | Image | Role |
 |---|---|---|
-| Caddy | `caddy:latest` | Reverse proxy, TLS termination |
-| AdGuard Home | `adguard/adguardhome:latest` | DNS resolver + ad blocking |
-| Beszel | `henrygd/beszel:latest` | Resource monitoring dashboard |
-| Beszel Agent | `henrygd/beszel-agent:latest` | Host metrics collector (`network_mode: host`) |
+| Caddy | `caddy:latest` | Reverse proxy, TLS |
+| AdGuard Home | `adguard/adguardhome:latest` | DNS + ad blocking |
+| Beszel | `henrygd/beszel:latest` | Monitoring dashboard |
+| Beszel Agent | `henrygd/beszel-agent:latest` | Host metrics (`network_mode: host`) |
 | Dispatcharr | `ghcr.io/dispatcharr/dispatcharr:latest` | IPTV stream management |
-| Filebrowser | `filebrowser/filebrowser:v2-alpine` | Web-based file manager (serves `/opt`) |
-| Ghostfolio | `ghostfolio/ghostfolio:latest` | Portfolio & wealth management |
-| Ghostfolio DB | `postgres:15-alpine` | Postgres storage for Ghostfolio |
-| Ghostfolio Cache | `redis:alpine` | Redis cache for Ghostfolio |
-| Honey | `ghcr.io/dani3l0/honey:latest` | Start page / dashboard |
-| MediaFlow Proxy | `ghcr.io/mhdzumair/mediaflow-proxy-light:latest` | Debrid media proxy (Rust, light edition) |
-| Watchtower | `nickfedor/watchtower:latest` | Automatic image updates |
-| Zublo | `ghcr.io/danielalves96/zublo:latest` | Personal finance tracker |
+| Filebrowser | `filebrowser/filebrowser:v2-alpine` | Web file manager (serves `/opt`) |
+| Ghostfolio | `ghostfolio/ghostfolio:latest` | Portfolio tracker |
+| Ghostfolio DB | `postgres:15-alpine` | Postgres for Ghostfolio |
+| Ghostfolio Cache | `redis:alpine` | Redis for Ghostfolio |
+| Honey | `ghcr.io/dani3l0/honey:latest` | Dashboard / start page |
+| MediaFlow Proxy | `ghcr.io/mhdzumair/mediaflow-proxy-light:latest` | Debrid media proxy |
+| Warp | `caomingjun/warp:latest` | Cloudflare HTTP proxy for MediaFlow |
+| Watchtower | `nickfedor/watchtower:latest` | Auto image updates |
+| Zublo | `ghcr.io/danielalves96/zublo:latest` | Subscription tracker |
 
 ## Repo structure
 
 ```
-compose.yaml              # Root: includes all apps via `include:`
-.env.example              # Template — copy to .env and fill
-.gitattributes            # Enforces LF line endings across the repo
+compose.yaml          # Root: includes all apps via `include:`
+.env.example          # Template — copy to .env and fill
+.gitattributes        # Enforces LF line endings
 .gitignore
-CLAUDE.md                 # This file
-README.md                 # Setup guide
+CLAUDE.md
+README.md
 apps/
   <service>/
-    compose.yaml          # Per-service compose fragment
-    Caddyfile             # Caddy only
-    config.json           # Honey only
-    redis.conf            # Dispatcharr only (custom Redis config for AIO mode)
-    uwsgi.ini             # Dispatcharr only (custom uWSGI config for AIO mode)
+    compose.yaml
+    Caddyfile         # caddy only
+    config.json       # honey only
+    redis.conf        # dispatcharr only
+    uwsgi.ini         # dispatcharr only
 ```
 
-Data is persisted under `$DOCKER_DATA_DIR` (default `/opt/docker/data`), never inside the repo.
+Data is persisted under `$DOCKER_DATA_DIR` (default `/opt/docker/data`), never in the repo.
 
 ## Network
 
-All services share a single user-defined bridge network (`vps_network`, defined in root `compose.yaml`).
-Services communicate by container name (e.g. `dispatcharr:9191`).
-Only Caddy and AdGuard expose ports to the host (`80`, `443`, `53`).
-Never add `ports:` to internal services — use `expose:` only.
+All services share `vps_network` (defined in root `compose.yaml`). Services talk to each other by container name.
 
-The Beszel Agent is an exception: it uses `network_mode: host` to collect host-level metrics.
-It communicates with the Beszel hub via a shared Unix socket volume (`beszel-socket`), bypassing the bridge network entirely.
+Only Caddy and AdGuard expose host ports (`80`, `443`, `53`, `853`). All other services use `expose:` only — never `ports:`.
+
+Beszel Agent uses `network_mode: host` and communicates with the hub via a Unix socket volume (`beszel-socket`).
+
+**Never define a separate network inside a per-app compose fragment.** Everything shares `vps_network` via the root compose default.
 
 ## Memory budget
 
-Total hard limit: **1936M** across all 13 containers. The ceiling is kept under **~1950M** to guarantee host OS stability on a 2 GB node.
+Hard limits across all 14 containers. Keep total under ~2000M.
 
 | Container | Limit |
 |---|---|
@@ -73,61 +74,68 @@ Total hard limit: **1936M** across all 13 containers. The ceiling is kept under 
 | Ghostfolio Cache | 32M |
 | Honey | 48M |
 | MediaFlow Proxy | 96M |
+| Warp | 64M |
 | Watchtower | 64M |
 | Zublo | 64M |
-| **Total** | **2000M** |
+| **Total** | **2068M** |
 
-Do not raise a limit without verifying the running total stays under ~1950M.
-Dispatcharr is capped at 768M — optimized by mounting a custom `uwsgi.ini` and `redis.conf`.
+## MediaFlow + Warp
 
-## Dispatcharr specifics
+MediaFlow routes all traffic through Warp (`caomingjun/warp`) so debrid add-ons (Torrentio, etc.) aren't blocked by debrid providers.
 
-- Runs in AIO mode (`DISPATCHARR_ENV=aio`): Redis + Celery workers + Daphne + uWSGI in a single container.
-- `uwsgi.ini` in `apps/dispatcharr/` is mounted into the AIO container at `/app/docker/uwsgi.ini`.
-- `redis.conf` in `apps/dispatcharr/` is mounted at `/etc/dispatcharr/redis.conf` and caps Redis at 64 MB with LRU eviction and no persistence.
-- `workers = 1` is intentional for single-user use. Raising to 2 doubles the Django/gevent footprint (~+150M).
-- `post-buffering = 0` disables request buffering — required for real-time IPTV streaming. Do not set a non-zero value.
-- Streaming timeouts are intentionally long (`http-timeout = 600`, `socket-timeout = 600`).
-- gevent is used for concurrency (`gevent = 50`). Monkey-patching is required and already configured.
+- Warp exposes an HTTP proxy on port `1080`
+- `APP__PROXY__ALL_PROXY=true` sends all MediaFlow traffic through it — no per-domain routing needed
+- Warp requires `cap_add: NET_ADMIN` and the `src_valid_mark` sysctl
+- MediaFlow uses `depends_on: warp: condition: service_healthy` — Warp must confirm `warp=on` before MediaFlow starts
+- `warp-data` volume persists the registration across restarts
+
+Warp lives in `apps/warp/` as a standalone service. MediaFlow depends on it but they are separate compose fragments.
+
+## Dispatcharr
+
+- AIO mode (`DISPATCHARR_ENV=aio`): Redis + Celery + Daphne + uWSGI in one container
+- `uwsgi.ini` → mounted at `/app/docker/uwsgi.ini`
+- `redis.conf` → mounted at `/etc/dispatcharr/redis.conf` (64M cap, LRU, no persistence)
+- `workers = 1` is intentional — raising to 2 adds ~150M
+- `post-buffering = 0` is required for IPTV streaming — do not change
+- `gevent = 50` — do not raise without profiling
 
 ## Conventions
 
-- All compose files define `deploy.resources.limits` and `deploy.resources.reservations`.
-- All compose files define `stop_grace_period` for clean shutdowns.
-- All compose files define `logging` with `max-size`/`max-file` (belt-and-suspenders on top of `daemon.json`).
-- Healthchecks are defined on critical services: Caddy, AdGuard, Dispatcharr, Ghostfolio stack.
-- `restart: unless-stopped` on all services.
-- No hardcoded secrets — everything via `.env`.
-- `image: ...:latest` is intentional; Watchtower handles updates. Consider pinning dispatcharr to a version tag if upstream breaks.
+- All compose files define `deploy.resources.limits` + `reservations`, `stop_grace_period`, and `logging`
+- Healthchecks on all services where meaningful
+- `restart: unless-stopped` everywhere
+- No hardcoded secrets — `.env` only
+- `image: ...:latest` is intentional; Watchtower handles updates
 
 ## What to avoid
 
-- Don't add `ports:` to services that only need to be reachable via Caddy.
-- Don't raise `gevent` above 50 without profiling.
-- Don't add a second Redis container — Dispatcharr embeds its own in AIO mode.
-- Don't mount the Docker socket read-write except for Watchtower. Beszel Agent uses `:ro`.
-- Don't persist data inside the container — always volume-mount to `$DOCKER_DATA_DIR/<service>`.
-- Don't commit `.env` — only `.env.example` goes in git.
+- `ports:` on internal services
+- Separate networks in per-app compose files
+- Raising `gevent` above 50
+- A second Redis container (Dispatcharr embeds its own)
+- Docker socket mounted read-write except on Watchtower
+- Data persisted inside containers
 
 ## Common operations
 
 ```bash
-# Start everything
+# Start
 docker compose up -d
 
-# Check status and memory
+# Status + memory
 docker compose ps
 docker stats --no-stream
 
-# Reload Caddy config without restart
+# Reload Caddy
 docker compose exec -w /etc/caddy caddy caddy reload
 
-# Follow logs for a service
-docker compose logs -f dispatcharr
+# Logs
+docker compose logs -f <service>
 
-# Pull latest images and recreate changed containers
+# Update all images
 docker compose pull && docker compose up -d
 
-# Full teardown (keeps volumes)
-docker compose down
+# Verify Warp tunnel
+docker compose exec warp curl -s https://cloudflare.com/cdn-cgi/trace | grep warp
 ```

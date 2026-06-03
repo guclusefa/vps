@@ -7,14 +7,9 @@ apps/**/.env
 !apps/**/.env.example
 
 # ── Application Data ──────────────────────────────────────────────────────────
+# Data lives under $DOCKER_DATA_DIR (/opt/docker/data), not in the repo.
+# These patterns guard against accidental data files being staged locally.
 /data/
-
-# AdGuard generates runtime state and hashed passwords here
-apps/adguard/work/
-apps/adguard/config/
-
-# Uncomment to keep Honey dashboard config out of git
-# apps/honey/config.json
 
 # ── Backups & Archives ────────────────────────────────────────────────────────
 backups/

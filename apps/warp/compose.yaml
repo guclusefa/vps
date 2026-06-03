@@ -1,0 +1,37 @@
+services:
+  warp:
+    image: caomingjun/warp:latest
+    container_name: warp
+    restart: unless-stopped
+    expose:
+      - "1080"
+    volumes:
+      - warp-data:/var/lib/cloudflare-warp
+    environment:
+      - WARP_SLEEP=${WARP_SLEEP:-2}
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+      - net.ipv4.conf.all.src_valid_mark=1
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs -x http://localhost:1080 https://cloudflare.com/cdn-cgi/trace | grep -q 'warp=on'"]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 30s
+    stop_grace_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+        reservations:
+          memory: 16M
+
+volumes:
+  warp-data:

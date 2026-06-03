@@ -6,14 +6,24 @@ services:
     expose:
       - "8888"
     environment:
-      - TZ=${TZ:-UTC}
       - APP__AUTH__API_PASSWORD=${MEDIAFLOW_API_PASSWORD}
+      - APP__PROXY__PROXY_URL=http://warp:1080
+      - APP__PROXY__ALL_PROXY=true
+    depends_on:
+      warp:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:8888/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     stop_grace_period: 10s
     logging:
       driver: json-file
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "5m"
+        max-file: "2"
     deploy:
       resources:
         limits:

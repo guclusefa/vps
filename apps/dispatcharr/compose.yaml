@@ -7,10 +7,7 @@ services:
       - "9191"
     volumes:
       - ${DOCKER_DATA_DIR}/dispatcharr:/data
-      # Mount our uwsgi.ini over the image's built-in config.
-      # The AIO entrypoint reads /app/docker/uwsgi.ini at startup.
       - ./uwsgi.ini:/app/docker/uwsgi.ini:ro
-      # Mount our redis.conf so Redis starts with a memory cap and no persistence.
       - ./redis.conf:/etc/dispatcharr/redis.conf:ro
     environment:
       - TZ=${TZ:-UTC}
@@ -18,7 +15,6 @@ services:
       - REDIS_HOST=localhost
       - CELERY_BROKER_URL=redis://localhost:6379/0
       - DISPATCHARR_LOG_LEVEL=info
-      # Celery/EPG tasks run at low priority (nice 5) to avoid starving uWSGI
       - CELERY_NICE_LEVEL=5
     healthcheck:
       test: ["CMD", "curl", "-fs", "http://localhost:9191/health/"]
