@@ -12,6 +12,7 @@ services:
       - HOST_NAME=https://${AIOMETADATA_HOSTNAME}
       - DATABASE_URI=sqlite:///app/addon/data/db.sqlite
       - REDIS_URL=redis://aiometadata-redis:6379
+      - ADMIN_KEY=${AIOMETADATA_ADMIN_KEY}
       - NODE_OPTIONS=--max-old-space-size=192
     depends_on:
       aiometadata-redis:
