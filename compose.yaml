@@ -1,5 +1,6 @@
 include:
   - apps/adguard/compose.yaml
+  - apps/aiostreams/compose.yaml
   - apps/beszel/compose.yaml
   - apps/caddy/compose.yaml
   - apps/dispatcharr/compose.yaml

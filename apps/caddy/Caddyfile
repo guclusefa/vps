@@ -3,6 +3,10 @@
     reverse_proxy adguard:80
 }
 
+{$AIOSTREAMS_HOSTNAME} {
+    reverse_proxy aiostreams:3000
+}
+
 {$BESZEL_HOSTNAME} {
     reverse_proxy beszel:8090
 }

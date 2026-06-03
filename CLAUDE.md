@@ -14,6 +14,7 @@ One `.env` file drives the entire stack.
 |---|---|---|
 | Caddy | `caddy:latest` | Reverse proxy, TLS |
 | AdGuard Home | `adguard/adguardhome:latest` | DNS + ad blocking |
+| AIOStreams | `ghcr.io/viren070/aiostreams:latest`| Stremio addon aggregator |
 | Beszel | `henrygd/beszel:latest` | Monitoring dashboard |
 | Beszel Agent | `henrygd/beszel-agent:latest` | Host metrics (`network_mode: host`) |
 | Dispatcharr | `ghcr.io/dispatcharr/dispatcharr:latest` | IPTV stream management |
@@ -65,6 +66,7 @@ Hard limits across all 14 containers. Keep total under ~2000M.
 |---|---|
 | Caddy | 128M |
 | AdGuard Home | 192M |
+| AIOStreams | 192M |
 | Beszel | 64M |
 | Beszel Agent | 64M |
 | Dispatcharr | 768M |
@@ -77,7 +79,7 @@ Hard limits across all 14 containers. Keep total under ~2000M.
 | Warp | 64M |
 | Watchtower | 64M |
 | Zublo | 64M |
-| **Total** | **2068M** |
+| **Total** | **2260M** |
 
 ## MediaFlow + Warp
 

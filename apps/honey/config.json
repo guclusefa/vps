@@ -22,6 +22,12 @@
 			"icon": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/adguard-home.png"
 		},
 		{
+			"name": "AIOStreams",
+			"desc": "Agrégateur et gestionnaire de flux Stremio tout-en-un avec filtrage et tri avancé.",
+			"href": "https://aiostreams.cestfa.app",
+			"icon": "https://raw.githubusercontent.com/Viren070/AIOStreams/main/packages/frontend/public/favicon.ico"
+		},
+		{
 			"name": "Beszel",
 			"desc": "Tableau de bord léger de surveillance des ressources du serveur et des conteneurs.",
 			"href": "https://beszel.cestfa.app",
