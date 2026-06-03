@@ -11,16 +11,11 @@ services:
       - TZ=${TZ:-UTC}
       - BASE_URL=https://${AIOSTREAMS_HOSTNAME}
       - SECRET_KEY=${AIOSTREAMS_SECRET_KEY}
-      - SEL_SYNC_ACCESS=all
-      - REGEX_FILTER_ACCESS=all
       - AIOSTREAMS_AUTH=${AIOSTREAMS_AUTH}
       - AIOSTREAMS_AUTH_ADMINS=${AIOSTREAMS_AUTH_ADMINS}
-      - ADDON_PROXY=${AIOSTREAMS_ADDON_PROXY:-}
-      - ADDON_PROXY_CONFIG=${AIOSTREAMS_ADDON_PROXY_CONFIG:-}
+      - SEL_SYNC_ACCESS=all
+      - REGEX_FILTER_ACCESS=all
       - NODE_OPTIONS=--max-old-space-size=384
-    depends_on:
-      warp:
-        condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:3000/"]
       interval: 30s
