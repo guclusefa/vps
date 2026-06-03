@@ -5,10 +5,11 @@ services:
     restart: unless-stopped
     expose:
       - "8888"
+    volumes:
+      - ./config.toml:/app/config.toml:ro
     environment:
       - APP__AUTH__API_PASSWORD=${MEDIAFLOW_API_PASSWORD}
-      - APP__PROXY__PROXY_URL=http://warp:1080
-      - APP__PROXY__ALL_PROXY=true
+      - CONFIG_PATH=/app/config.toml
     depends_on:
       warp:
         condition: service_healthy

@@ -1,0 +1,5 @@
+[proxy]
+proxy_url = ""
+
+[proxy.transport_routes]
+"https://torrentio.strem.fun" = { proxy = true, proxy_url = "http://warp:1080", verify_ssl = true }
