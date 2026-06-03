@@ -8,6 +8,7 @@ Self-hosted Docker stack for a 2 GB VPS. One `.env` file drives everything.
 |---|---|---|
 | Caddy | Reverse proxy + TLS | — |
 | AdGuard Home | DNS + ad blocking | `adguard.$DOMAIN` |
+| AIOMetadata | Stremio catalog enrichment | `aiometadata.$DOMAIN` |
 | AIOStreams | Stremio addon aggregator | `aiostreams.$DOMAIN` |
 | Beszel | Resource monitoring | `beszel.$DOMAIN` |
 | Beszel Agent | Host metrics collector | — |

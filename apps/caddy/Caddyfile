@@ -3,6 +3,10 @@
     reverse_proxy adguard:80
 }
 
+{$AIOMETADATA_HOSTNAME} {
+    reverse_proxy aiometadata:3232
+}
+
 {$AIOSTREAMS_HOSTNAME} {
     reverse_proxy aiostreams:3000
 }

@@ -22,6 +22,12 @@
 			"icon": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/adguard-home.png"
 		},
 		{
+			"name": "AIOMetadata",
+			"desc": "Générateur et enrichisseur de métadonnées et de catalogues pour Stremio.",
+			"href": "https://aiometadata.cestfa.app",
+			"icon": "https://raw.githubusercontent.com/cedya77/aiometadata/refs/heads/main/configure/public/favicon.ico"
+		},
+		{
 			"name": "AIOStreams",
 			"desc": "Agrégateur et gestionnaire de flux Stremio tout-en-un avec filtrage et tri avancé.",
 			"href": "https://aiostreams.cestfa.app",
