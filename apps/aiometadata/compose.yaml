@@ -11,10 +11,10 @@ services:
       - TZ=${TZ:-UTC}
       - HOST_NAME=https://${AIOMETADATA_HOSTNAME}
       - DATABASE_URI=sqlite:///app/addon/data/db.sqlite
-      - REDIS_URL=redis://:${GHOSTFOLIO_REDIS_PASSWORD}@ghostfolio-redis:6379/1
+      - REDIS_URL=redis://aiometadata-redis:6379
       - NODE_OPTIONS=--max-old-space-size=192
     depends_on:
-      ghostfolio-redis:
+      aiometadata-redis:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:3232/api/cache/health"]
@@ -34,3 +34,27 @@ services:
           memory: 256M
         reservations:
           memory: 64M
+
+  aiometadata-redis:
+    image: redis:alpine
+    container_name: aiometadata-redis
+    restart: unless-stopped
+    command: redis-server --maxmemory 16mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    stop_grace_period: 5s
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    deploy:
+      resources:
+        limits:
+          memory: 32M
+        reservations:
+          memory: 8M

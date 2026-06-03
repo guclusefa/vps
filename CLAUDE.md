@@ -15,6 +15,7 @@ One `.env` file drives the entire stack.
 | Caddy | `caddy:latest` | Reverse proxy, TLS |
 | AdGuard Home | `adguard/adguardhome:latest` | DNS + ad blocking |
 | AIOMetadata | `ghcr.io/cedya77/aiometadata:latest` | Stremio catalog & metadata generator |
+| AIOMetadata Cache | `redis:alpine` | Redis for AIOMetadata |
 | AIOStreams | `ghcr.io/viren070/aiostreams:latest`| Stremio addon aggregator |
 | Beszel | `henrygd/beszel:latest` | Monitoring dashboard |
 | Beszel Agent | `henrygd/beszel-agent:latest` | Host metrics (`network_mode: host`) |
@@ -68,6 +69,7 @@ Hard limits across all 14 containers. Keep total under ~2000M.
 | Caddy | 128M |
 | AdGuard Home | 192M |
 | AIOMetadata | 256M |
+| AIOMetadata Cache | 32M |
 | AIOStreams | 448M |
 | Beszel | 64M |
 | Beszel Agent | 64M |
@@ -81,7 +83,7 @@ Hard limits across all 14 containers. Keep total under ~2000M.
 | Warp | 64M |
 | Watchtower | 64M |
 | Zublo | 64M |
-| **Total** | **2772M** |
+| **Total** | **32M** |
 
 ## MediaFlow + Warp
 
