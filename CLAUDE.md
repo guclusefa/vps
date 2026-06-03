@@ -62,7 +62,7 @@ Beszel Agent uses `network_mode: host` and communicates with the hub via a Unix 
 
 ## Memory budget
 
-Hard limits across all 14 containers. Keep total under ~2000M.
+Hard limits across all 14 containers.
 
 | Container | Limit |
 |---|---|
@@ -83,14 +83,14 @@ Hard limits across all 14 containers. Keep total under ~2000M.
 | Warp | 64M |
 | Watchtower | 64M |
 | Zublo | 64M |
-| **Total** | **32M** |
+| **Total** | **2856M** |
 
 ## MediaFlow + Warp
 
 MediaFlow routes all traffic through Warp (`caomingjun/warp`) so debrid add-ons (Torrentio, etc.) aren't blocked by debrid providers.
 
 - Warp exposes an HTTP proxy on port `1080`
-- `APP__PROXY__ALL_PROXY=true` sends all MediaFlow traffic through it — no per-domain routing needed
+- Per-domain proxy routing is configured explicitly inside `apps/mediaflow-proxy/config.toml`
 - Warp requires `cap_add: NET_ADMIN` and the `src_valid_mark` sysctl
 - MediaFlow uses `depends_on: warp: condition: service_healthy` — Warp must confirm `warp=on` before MediaFlow starts
 - `warp-data` volume persists the registration across restarts

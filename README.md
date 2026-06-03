@@ -9,12 +9,15 @@ Self-hosted Docker stack for a 2 GB VPS. One `.env` file drives everything.
 | Caddy | Reverse proxy + TLS | — |
 | AdGuard Home | DNS + ad blocking | `adguard.$DOMAIN` |
 | AIOMetadata | Stremio catalog enrichment | `aiometadata.$DOMAIN` |
+| AIOMetadata Cache | Redis backing for AIOMetadata | — |
 | AIOStreams | Stremio addon aggregator | `aiostreams.$DOMAIN` |
 | Beszel | Resource monitoring | `beszel.$DOMAIN` |
 | Beszel Agent | Host metrics collector | — |
 | Dispatcharr | IPTV stream management | `dispatcharr.$DOMAIN` |
 | Filebrowser | Web file manager | `files.$DOMAIN` |
 | Ghostfolio | Portfolio tracker | `ghostfolio.$DOMAIN` |
+| Ghostfolio DB | PostgreSQL database for Ghostfolio | — |
+| Ghostfolio Cache | Redis caching for Ghostfolio | — |
 | Honey | Dashboard | `$DOMAIN` |
 | MediaFlow Proxy | Debrid media proxy | `mediaflow.$DOMAIN` |
 | Warp | Cloudflare proxy for MediaFlow | — |
