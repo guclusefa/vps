@@ -35,6 +35,6 @@
     reverse_proxy mediaflow-proxy:8888
 }
 
-{$ZUBLO_HOSTNAME} {
-    reverse_proxy zublo:9597
+{$WALLOS_HOSTNAME} {
+    reverse_proxy wallos:80
 }

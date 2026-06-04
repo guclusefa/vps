@@ -28,7 +28,7 @@ One `.env` file drives the entire stack.
 | MediaFlow Proxy | `ghcr.io/mhdzumair/mediaflow-proxy-light:latest` | Debrid media proxy | 96M |
 | Warp | `caomingjun/warp:latest` | Cloudflare HTTP proxy for MediaFlow | 64M |
 | Watchtower | `nickfedor/watchtower:latest` | Auto image updates | 64M |
-| Zublo | `ghcr.io/danielalves96/zublo:latest` | Subscription tracker | 64M |
+| Wallos | `bellamy6/wallos:latest` | Subscription tracker | 64M |
 | **Total** |  |  | **3200M** |
 
 ## Repo structure

@@ -1,21 +1,21 @@
 services:
-  zublo:
-    image: ghcr.io/danielalves96/zublo:latest
-    container_name: zublo
+  wallos:
+    image: bellamy6/wallos:latest
+    container_name: wallos
     restart: unless-stopped
     expose:
-      - "9597"
+      - "80"
     volumes:
-      - ${DOCKER_DATA_DIR}/zublo:/pb/pb_data
+      - ${DOCKER_DATA_DIR}/wallos/db:/var/www/html/db
+      - ${DOCKER_DATA_DIR}/wallos/logos:/var/www/html/images/uploads/logos
     environment:
       - TZ=${TZ:-UTC}
-      - PB_ENCRYPTION_KEY=${ZUBLO_PB_ENCRYPTION_KEY}
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:9597/api/health"]
+      test: ["CMD", "curl", "-f", "http://localhost/api/health.php"]
       interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 10s
+      start_period: 15s
     stop_grace_period: 5s
     logging:
       driver: json-file

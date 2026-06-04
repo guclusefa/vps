@@ -11,7 +11,7 @@ include:
   - apps/mediaflow-proxy/compose.yaml
   - apps/warp/compose.yaml
   - apps/watchtower/compose.yaml
-  - apps/zublo/compose.yaml
+  - apps/wallos/compose.yaml
 
 networks:
   default:
