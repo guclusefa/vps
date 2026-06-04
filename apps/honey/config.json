@@ -64,10 +64,10 @@
 			"icon": "https://raw.githubusercontent.com/mhdzumair/mediaflow-proxy/refs/heads/main/mediaflow_proxy/static/logo.png"
 		},
 		{
-			"name": "Zublo",
+			"name": "Wallos",
 			"desc": "Gestionnaire d'abonnements pour suivre tous les paiements récurrents en un seul endroit.",
-			"href": "https://zublo.cestfa.app",
-			"icon": "https://raw.githubusercontent.com/danielalves96/zublo/refs/heads/main/apps/web/public/icon-512.png"
+			"href": "https://wallos.cestfa.app",
+			"icon": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/wallos.png"
 		}
 	]
 }
