@@ -105,7 +105,7 @@ After first launch:
 
 ---
 
-### 5. AdGuard DNS-over-TLS (optional)
+### 5. AdGuard DNS-over-TLS (Required for External Devices)
 
 Enables `adguard.$DOMAIN` as a Private DNS provider.
 

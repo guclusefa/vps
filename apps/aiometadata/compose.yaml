@@ -13,6 +13,10 @@ services:
       - DATABASE_URI=sqlite:///app/addon/data/db.sqlite
       - REDIS_URL=redis://aiometadata-redis:6379
       - ADMIN_KEY=${AIOMETADATA_ADMIN_KEY}
+      - ADDON_PASSWORD=${AIOMETADATA_ADDON_PASSWORD}
+      - TRAKT_CLIENT_ID=${AIOMETADATA_TRAKT_CLIENT_ID}
+      - TRAKT_CLIENT_SECRET=${AIOMETADATA_TRAKT_CLIENT_SECRET}
+      - TRAKT_REDIRECT_URI=${AIOMETADATA_TRAKT_REDIRECT_URI}
       - NODE_OPTIONS=--max-old-space-size=192
     depends_on:
       aiometadata-redis:
