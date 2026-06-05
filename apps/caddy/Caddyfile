@@ -35,6 +35,10 @@
     reverse_proxy mediaflow-proxy:8888
 }
 
+{$UPTIME_KUMA_HOSTNAME} {
+    reverse_proxy uptime-kuma:3001
+}
+
 {$WALLOS_HOSTNAME} {
     reverse_proxy wallos:80
 }

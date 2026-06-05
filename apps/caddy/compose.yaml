@@ -23,6 +23,7 @@ services:
       - GHOSTFOLIO_HOSTNAME=${GHOSTFOLIO_HOSTNAME}
       - HONEY_HOSTNAME=${HONEY_HOSTNAME}
       - MEDIAFLOW_PROXY_HOSTNAME=${MEDIAFLOW_PROXY_HOSTNAME}
+      - UPTIME_KUMA_HOSTNAME=${UPTIME_KUMA_HOSTNAME}
       - WALLOS_HOSTNAME=${WALLOS_HOSTNAME}
     healthcheck:
       test: ["CMD", "caddy", "validate", "--config", "/etc/caddy/Caddyfile"]

@@ -11,6 +11,7 @@ include:
   - apps/mediaflow-proxy/compose.yaml
   - apps/warp/compose.yaml
   - apps/watchtower/compose.yaml
+  - apps/uptime-kuma/compose.yaml
   - apps/wallos/compose.yaml
 
 networks:
