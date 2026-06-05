@@ -66,7 +66,7 @@
 		{
 			"name": "Uptime Kuma",
 			"desc": "Outil de surveillance de site web open-source pour vérifier la disponibilité et les performances de vos services auto-hébergés.",
-			"href": "https://kuma.cestfa.app",
+			"href": "https://uptime.cestfa.app",
 			"icon": "https://raw.githubusercontent.com/louislam/uptime-kuma/2372d39b1b6cc80004f7c32d24cbfd7113f0b01c/public/icon.svg"
 		},
 		{
