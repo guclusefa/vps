@@ -21,9 +21,3 @@ services:
       options:
         max-size: "5m"
         max-file: "2"
-    deploy:
-      resources:
-        limits:
-          memory: 128M
-        reservations:
-          memory: 32M

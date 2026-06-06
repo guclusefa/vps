@@ -2,7 +2,7 @@ services:
   mediaflow-proxy:
     image: ghcr.io/mhdzumair/mediaflow-proxy-light:latest
     container_name: mediaflow-proxy
-    restart: unless-stopped
+    restart: always
     expose:
       - "8888"
     volumes:
@@ -14,15 +14,15 @@ services:
     depends_on:
       warp:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:8888/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
     stop_grace_period: 10s
     logging:
       driver: json-file
       options:
         max-size: "5m"
         max-file: "2"
-    deploy:
-      resources:
-        limits:
-          memory: 96M
-        reservations:
-          memory: 32M

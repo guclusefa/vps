@@ -17,7 +17,6 @@ services:
       - TRAKT_CLIENT_ID=${AIOMETADATA_TRAKT_CLIENT_ID}
       - TRAKT_CLIENT_SECRET=${AIOMETADATA_TRAKT_CLIENT_SECRET}
       - TRAKT_REDIRECT_URI=${AIOMETADATA_TRAKT_REDIRECT_URI}
-      - NODE_OPTIONS=--max-old-space-size=192
     depends_on:
       aiometadata-redis:
         condition: service_healthy
@@ -33,18 +32,11 @@ services:
       options:
         max-size: "5m"
         max-file: "2"
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-        reservations:
-          memory: 64M
 
   aiometadata-redis:
     image: redis:alpine
     container_name: aiometadata-redis
     restart: unless-stopped
-    command: redis-server --maxmemory 16mb --maxmemory-policy allkeys-lru
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -57,9 +49,3 @@ services:
       options:
         max-size: "5m"
         max-file: "2"
-    deploy:
-      resources:
-        limits:
-          memory: 32M
-        reservations:
-          memory: 8M

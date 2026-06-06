@@ -31,15 +31,9 @@ services:
       options:
         max-size: "5m"
         max-file: "2"
-    deploy:
-      resources:
-        limits:
-          memory: 384M
-        reservations:
-          memory: 64M
 
   ghostfolio-db:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     container_name: ghostfolio-db
     restart: unless-stopped
     volumes:
@@ -48,6 +42,15 @@ services:
       - POSTGRES_DB=ghostfolio
       - POSTGRES_USER=ghostfolio
       - POSTGRES_PASSWORD=${GHOSTFOLIO_POSTGRES_PASSWORD}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    command: >
+      postgres
+        -c shared_buffers=128MB
+        -c work_mem=8MB
+        -c maintenance_work_mem=64MB
+        -c effective_cache_size=256MB
+        -c max_connections=50
+        -c wal_compression=on
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ghostfolio -d ghostfolio"]
       interval: 10s
@@ -60,18 +63,12 @@ services:
       options:
         max-size: "5m"
         max-file: "2"
-    deploy:
-      resources:
-        limits:
-          memory: 64M
-        reservations:
-          memory: 16M
 
   ghostfolio-redis:
     image: redis:alpine
     container_name: ghostfolio-redis
     restart: unless-stopped
-    command: redis-server --requirepass ${GHOSTFOLIO_REDIS_PASSWORD} --maxmemory 24mb --maxmemory-policy allkeys-lru
+    command: redis-server --requirepass ${GHOSTFOLIO_REDIS_PASSWORD}
     healthcheck:
       test: ["CMD", "redis-cli", "-a", "${GHOSTFOLIO_REDIS_PASSWORD}", "ping"]
       interval: 10s
@@ -84,9 +81,3 @@ services:
       options:
         max-size: "5m"
         max-file: "2"
-    deploy:
-      resources:
-        limits:
-          memory: 32M
-        reservations:
-          memory: 8M

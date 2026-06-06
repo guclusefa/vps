@@ -2,7 +2,7 @@ services:
   warp:
     image: caomingjun/warp:latest
     container_name: warp
-    restart: unless-stopped
+    restart: always
     expose:
       - "1080"
     volumes:
@@ -26,12 +26,6 @@ services:
       options:
         max-size: "5m"
         max-file: "2"
-    deploy:
-      resources:
-        limits:
-          memory: 64M
-        reservations:
-          memory: 16M
 
 volumes:
   warp-data:

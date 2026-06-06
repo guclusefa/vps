@@ -1,6 +1,6 @@
 # VPS Stack
 
-Self-hosted Docker stack for a low resource VPS, with Caddy reverse proxy and automatic TLS. Services include AdGuard Home, Stremio addons, a portfolio tracker, and more. A single `.env` file configures the entire stack. Designed for easy deployment and management on a 1 vCPU, 2 GB RAM VPS.
+Self-hosted Docker stack with Caddy reverse proxy and automatic TLS. Services include AdGuard Home, Stremio addons, a portfolio tracker, and more. A single `.env` file configures the entire stack.
 
 ## Setup
 
@@ -20,7 +20,7 @@ sudo systemctl disable systemd-resolved
 echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf
 ```
 
-**Swap (required on 2 GB VPS):**
+**Swap:**
 
 ```bash
 sudo fallocate -l 2G /swapfile
@@ -39,6 +39,19 @@ sudo mkdir -p /etc/systemd/journald.conf.d
 printf '[Journal]\nSystemMaxUse=100M\nRuntimeMaxUse=50M\n' | \
   sudo tee /etc/systemd/journald.conf.d/size.conf
 sudo systemctl restart systemd-journald
+```
+
+**Firewall:**
+
+```bash
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw allow 443/udp
+sudo ufw allow 853/tcp
+sudo ufw --force enable
 ```
 
 **Docker log rotation:**

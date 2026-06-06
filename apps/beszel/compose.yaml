@@ -23,12 +23,6 @@ services:
       options:
         max-size: "5m"
         max-file: "2"
-    deploy:
-      resources:
-        limits:
-          memory: 64M
-        reservations:
-          memory: 16M
 
   beszel-agent:
     image: henrygd/beszel-agent:latest
@@ -56,9 +50,3 @@ services:
       options:
         max-size: "5m"
         max-file: "2"
-    deploy:
-      resources:
-        limits:
-          memory: 64M
-        reservations:
-          memory: 16M

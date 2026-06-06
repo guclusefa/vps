@@ -1,44 +1,65 @@
+{
+    servers {
+        protocols h1 h2 h3
+    }
+}
+
+(common) {
+    encode zstd gzip
+}
+
 {$ADGUARD_HOSTNAME} {
+    import common
     # First launch: set to adguard:3000, complete wizard, then restore to adguard:80
     reverse_proxy adguard:80
 }
 
 {$AIOMETADATA_HOSTNAME} {
+    import common
     reverse_proxy aiometadata:3232
 }
 
 {$AIOSTREAMS_HOSTNAME} {
+    import common
     reverse_proxy aiostreams:3000
 }
 
 {$BESZEL_HOSTNAME} {
+    import common
     reverse_proxy beszel:8090
 }
 
 {$DISPATCHARR_HOSTNAME} {
+    import common
     reverse_proxy dispatcharr:9191
 }
 
 {$FILEBROWSER_HOSTNAME} {
+    import common
     reverse_proxy filebrowser:80
 }
 
 {$GHOSTFOLIO_HOSTNAME} {
+    import common
     reverse_proxy ghostfolio:3333
 }
 
 {$HONEY_HOSTNAME} {
+    import common
     reverse_proxy honey:4173
 }
 
 {$MEDIAFLOW_PROXY_HOSTNAME} {
+    import common
     reverse_proxy mediaflow-proxy:8888
 }
 
 {$UPTIME_KUMA_HOSTNAME} {
+    import common
     reverse_proxy uptime-kuma:3001
 }
 
 {$WALLOS_HOSTNAME} {
+    import common
     reverse_proxy wallos:80
 }
