@@ -10,8 +10,8 @@
 
 {$ADGUARD_HOSTNAME} {
     import common
-    # First launch: set to adguard:3000, complete wizard, then restore to adguard:80
-    reverse_proxy adguard:80
+    # Port is set dynamically via ADGUARD_PORT in .env (defaults to 80, set to 3000 during setup wizard)
+    reverse_proxy adguard:{$ADGUARD_PORT}
 }
 
 {$AIOMETADATA_HOSTNAME} {

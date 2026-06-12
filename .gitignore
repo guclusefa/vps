@@ -36,3 +36,28 @@ desktop.ini
 .idea/
 *.swp
 *.swo
+*~
+.sass-cache/
+
+# ── Python runtime & caches ───────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# ── Node runtime & debug ──────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.next/
+out/
+dist/
+
+# ── Environment & local overrides ─────────────────────────────────────────────
+.envrc
+.direnv/
+

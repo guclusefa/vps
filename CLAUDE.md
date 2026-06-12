@@ -19,7 +19,6 @@ A self-hosted Docker stack for a personal VPS. All services run behind Caddy (re
 | Beszel Agent | `henrygd/beszel-agent:latest` | Host metrics (`network_mode: host`) |
 | Dispatcharr | `ghcr.io/dispatcharr/dispatcharr:latest` | IPTV stream management (web) |
 | Dispatcharr Celery | `ghcr.io/dispatcharr/dispatcharr:latest` | IPTV stream management (workers) |
-| Dispatcharr Cache | `redis:alpine` | Redis broker for Dispatcharr |
 | Filebrowser | `filebrowser/filebrowser:v2-alpine` | Web file manager (serves `/opt`) |
 | Ghostfolio | `ghostfolio/ghostfolio:latest` | Portfolio tracker |
 | Ghostfolio DB | `postgres:16-alpine` | Postgres for Ghostfolio |
@@ -62,7 +61,7 @@ Beszel Agent uses `network_mode: host` and communicates with the hub via a Unix 
 
 ## Dispatcharr
 
-Dispatcharr runs as three separate containers: `dispatcharr` (Django web), `dispatcharr-celery` (background workers), `dispatcharr-redis` (broker). All share the same image and the same data volume at `$DOCKER_DATA_DIR/dispatcharr`. The web container uses `DISPATCHARR_ENV=server`, the worker container uses `DISPATCHARR_ENV=celery`.
+Dispatcharr runs as a single container `dispatcharr` in All-in-One (`aio`) mode (`DISPATCHARR_ENV=aio`). It manages the Django web application, background celery workers, and broker internally. It persists data at `$DOCKER_DATA_DIR/dispatcharr`.
 
 ## MediaFlow + Warp
 

@@ -82,10 +82,10 @@ openssl rand -hex 32
 
 ### 3. First launch
 
-AdGuard's setup wizard runs on port `3000`. Before starting, open `apps/caddy/Caddyfile` and temporarily change the AdGuard line:
+AdGuard's setup wizard runs on port `3000`. Before starting, open `.env` and temporarily set the port:
 
-```
-reverse_proxy adguard:3000
+```ini
+ADGUARD_PORT=3000
 ```
 
 Start the stack:
@@ -99,10 +99,10 @@ Open `https://adguard.$DOMAIN` and complete the wizard. Set:
 - **Web interface port:** `80`
 - **DNS server port:** `53`
 
-Once done, restore the Caddyfile to `adguard:80` and reload:
+Once done, restore `ADGUARD_PORT` to `80` in `.env` and apply the changes by recreating Caddy:
 
 ```bash
-docker compose exec -w /etc/caddy caddy caddy reload
+docker compose up -d caddy
 ```
 
 ---
