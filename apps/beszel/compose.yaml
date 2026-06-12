@@ -3,26 +3,15 @@ services:
     image: henrygd/beszel:latest
     container_name: beszel
     restart: unless-stopped
-    expose:
-      - "8090"
+
     volumes:
       - ${DOCKER_DATA_DIR}/beszel:/beszel_data
       - ${DOCKER_DATA_DIR}/beszel-socket:/beszel_socket
     environment:
       - TZ=${TZ:-UTC}
       - APP_URL=https://${BESZEL_HOSTNAME}
-    healthcheck:
-      test: ["CMD", "/beszel", "health", "--url", "http://127.0.0.1:8090"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
-    stop_grace_period: 10s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
+
+
 
   beszel-agent:
     image: henrygd/beszel-agent:latest
@@ -38,15 +27,6 @@ services:
       - LISTEN=/beszel_socket/beszel.sock
       - KEY=${BESZEL_AGENT_KEY}
       - TOKEN=${BESZEL_AGENT_TOKEN}
-    healthcheck:
-      test: ["CMD", "/agent", "health"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
+
     stop_grace_period: 5s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
+

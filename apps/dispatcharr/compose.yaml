@@ -3,8 +3,7 @@ services:
     image: ghcr.io/dispatcharr/dispatcharr:latest
     container_name: dispatcharr
     restart: always
-    expose:
-      - "9191"
+
     volumes:
       - ${DOCKER_DATA_DIR}/dispatcharr:/data
     environment:
@@ -13,15 +12,5 @@ services:
       - REDIS_HOST=127.0.0.1
       - CELERY_BROKER_URL=redis://127.0.0.1:6379/0
       - DISPATCHARR_LOG_LEVEL=info
-    healthcheck:
-      test: ["CMD", "curl", "-fs", "http://127.0.0.1:9191/health/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
+
     stop_grace_period: 15s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"

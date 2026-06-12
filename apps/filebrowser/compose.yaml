@@ -4,22 +4,12 @@ services:
     container_name: filebrowser
     restart: unless-stopped
     command: -d /config/filebrowser.db -p 80
-    expose:
-      - "80"
+
     volumes:
       - /opt:/srv
       - ${DOCKER_DATA_DIR}/filebrowser:/config
     environment:
       - TZ=${TZ:-UTC}
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:80/health"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
+
     stop_grace_period: 5s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
+

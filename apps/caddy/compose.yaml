@@ -30,15 +30,5 @@ services:
       - UPTIME_KUMA_HOSTNAME=${UPTIME_KUMA_HOSTNAME}
       - WALLOS_HOSTNAME=${WALLOS_HOSTNAME}
       - WG_EASY_HOSTNAME=${WG_EASY_HOSTNAME}
-    healthcheck:
-      test: ["CMD", "caddy", "validate", "--config", "/etc/caddy/Caddyfile"]
-      interval: 60s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    stop_grace_period: 10s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
+
+

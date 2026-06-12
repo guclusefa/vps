@@ -3,8 +3,7 @@ services:
     image: stirlingtools/stirling-pdf:latest
     container_name: stirling-pdf
     restart: unless-stopped
-    expose:
-      - "8080"
+
     volumes:
       - ${DOCKER_DATA_DIR}/stirling-pdf/tessdata:/usr/share/tessdata
       - ${DOCKER_DATA_DIR}/stirling-pdf/configs:/configs
@@ -16,9 +15,4 @@ services:
       - SECURITY_ENABLELOGIN=false
       - SYSTEM_MAXFILESIZE=250
       - SYSTEM_FRONTENDURL=https://${STIRLING_PDF_HOSTNAME}
-    stop_grace_period: 10s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
+

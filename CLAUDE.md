@@ -29,7 +29,7 @@ Data is persisted under `$DOCKER_DATA_DIR` (default `/opt/docker/data`), never i
 
 All services share `vps_network` (defined in root [compose.yaml](file:///home/ceest/dev/vps/compose.yaml)). Services talk to each other by container name.
 
-Only Caddy and AdGuard expose host ports (`80`, `443`, `53`, `853`). All other services use `expose:` only — never `ports:`.
+Only Caddy and AdGuard expose host ports (`80`, `443`, `53`, `853`). All other services rely on Docker network service resolution — never use `ports:` or `expose:`.
 
 Beszel Agent uses `network_mode: host` and communicates with the hub via a Unix socket volume (`beszel-socket`).
 
@@ -46,7 +46,7 @@ MediaFlow routes all traffic through Warp (`caomingjun/warp`) so debrid add-ons 
 - Warp exposes an HTTP proxy on port `1080`
 - Per-domain proxy routing is configured explicitly inside `apps/mediaflow-proxy/config.toml`
 - Warp requires `cap_add: NET_ADMIN` and the `src_valid_mark` sysctl
-- MediaFlow uses `depends_on: warp: condition: service_healthy` — Warp must confirm `warp=on` before MediaFlow starts
+- MediaFlow uses `depends_on: [warp]` — starts after Warp container starts
 - `warp-data` volume persists the registration across restarts
 
 ## Caddy
@@ -63,8 +63,8 @@ HTTP/3 (QUIC) is enabled globally. All subdomains are derived from [.env](file:/
 
 ## Conventions
 
-- `stop_grace_period` and `logging` on all services
-- Healthchecks on all services where meaningful
+- `logging` is handled globally by `daemon.json`; custom `stop_grace_period` is used only when overriding the default `10s`.
+- No custom healthchecks (rely on image defaults)
 - `restart: always` on critical services (Caddy, Warp, AdGuard, MediaFlow, Dispatcharr, WG-Easy)
 - `restart: unless-stopped` on personal tools (Ghostfolio, Wallos, Honey, Stirling-PDF, Comet, MediaFusion, etc.)
 - No hardcoded secrets — [.env](file:///home/ceest/dev/vps/.env) only

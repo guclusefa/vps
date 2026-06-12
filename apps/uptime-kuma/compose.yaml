@@ -3,21 +3,10 @@ services:
     image: louislam/uptime-kuma:latest
     container_name: uptime-kuma
     restart: unless-stopped
-    expose:
-      - "3001"
+
     volumes:
       - ${DOCKER_DATA_DIR}/uptime-kuma:/app/data
     environment:
       - TZ=${TZ:-UTC}
-    healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:3001/api/entry-page', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 20s
-    stop_grace_period: 10s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
+
+

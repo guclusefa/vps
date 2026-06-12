@@ -3,8 +3,7 @@ services:
     image: mhdzumair/mediafusion:latest
     container_name: mediafusion-api
     restart: unless-stopped
-    expose:
-      - "8000"
+
     environment:
       - TZ=${TZ:-UTC}
       - HOST_URL=https://${MEDIAFUSION_HOSTNAME}
@@ -14,22 +13,9 @@ services:
       - API_PASSWORD=${MEDIAFUSION_API_PASSWORD}
       - CONTACT_EMAIL=admin@${DOMAIN}
     depends_on:
-      mediafusion-postgres:
-        condition: service_healthy
-      mediafusion-redis:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1:8000/health"]
-      interval: 30s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    stop_grace_period: 10s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
+      - mediafusion-postgres
+      - mediafusion-redis
+
 
   mediafusion-worker:
     image: mhdzumair/mediafusion:latest
@@ -45,18 +31,10 @@ services:
       - API_PASSWORD=${MEDIAFUSION_API_PASSWORD}
       - CONTACT_EMAIL=admin@${DOMAIN}
     depends_on:
-      mediafusion-postgres:
-        condition: service_healthy
-      mediafusion-redis:
-        condition: service_healthy
-      mediafusion-api:
-        condition: service_healthy
-    stop_grace_period: 10s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
+      - mediafusion-postgres
+      - mediafusion-redis
+      - mediafusion-api
+
 
   mediafusion-postgres:
     image: postgres:17-alpine
@@ -68,32 +46,13 @@ services:
       - POSTGRES_DB=mediafusion
       - POSTGRES_USER=mediafusion
       - POSTGRES_PASSWORD=${MEDIAFUSION_POSTGRES_PASSWORD}
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U mediafusion -d mediafusion"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
-    stop_grace_period: 10s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
+
+
 
   mediafusion-redis:
     image: redis:alpine
     container_name: mediafusion-redis
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 5s
+
     stop_grace_period: 5s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
+
