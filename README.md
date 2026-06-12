@@ -83,7 +83,16 @@ sudo ufw --force enable
 **Docker log rotation:**
 
 ```bash
-sudo cp daemon.json /etc/docker/daemon.json
+sudo mkdir -p /etc/docker
+cat <<EOF | sudo tee /etc/docker/daemon.json
+{
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "3"
+  }
+}
+EOF
 sudo systemctl restart docker
 ```
 
