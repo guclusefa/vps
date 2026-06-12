@@ -11,6 +11,7 @@ services:
       - TZ=${TZ:-UTC}
       - DATABASE_TYPE=sqlite
       - DATABASE_PATH=/app/data/comet.db
+      - FASTAPI_PORT=2020
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:2020/health"]
       interval: 30s

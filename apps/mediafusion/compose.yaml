@@ -7,6 +7,7 @@ services:
       - "8000"
     environment:
       - TZ=${TZ:-UTC}
+      - HOST_URL=https://${MEDIAFUSION_HOSTNAME}
       - POSTGRES_URI=postgresql://mediafusion:${MEDIAFUSION_POSTGRES_PASSWORD}@mediafusion-postgres:5432/mediafusion
       - REDIS_URL=redis://mediafusion-redis:6379/0
       - SECRET_KEY=${MEDIAFUSION_SECRET_KEY}
@@ -37,6 +38,7 @@ services:
     restart: unless-stopped
     environment:
       - TZ=${TZ:-UTC}
+      - HOST_URL=https://${MEDIAFUSION_HOSTNAME}
       - POSTGRES_URI=postgresql://mediafusion:${MEDIAFUSION_POSTGRES_PASSWORD}@mediafusion-postgres:5432/mediafusion
       - REDIS_URL=redis://mediafusion-redis:6379/0
       - SECRET_KEY=${MEDIAFUSION_SECRET_KEY}
