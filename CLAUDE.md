@@ -30,6 +30,7 @@ A self-hosted Docker stack for a personal VPS. All services run behind Caddy (re
 | Wallos | `bellamy/wallos:latest` | Subscription tracker |
 | Warp | `caomingjun/warp:latest` | Cloudflare HTTP proxy for MediaFlow |
 | Watchtower | `nickfedor/watchtower:latest` | Auto image updates |
+| WG-Easy | `ghcr.io/wg-easy/wg-easy:latest` | WireGuard VPN server + web UI |
 
 ## Repo structure
 

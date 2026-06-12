@@ -14,6 +14,7 @@ include:
   - apps/wallos/compose.yaml
   - apps/warp/compose.yaml
   - apps/watchtower/compose.yaml
+  - apps/wg-easy/compose.yaml
 
 networks:
   default:

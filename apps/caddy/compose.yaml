@@ -27,6 +27,7 @@ services:
       - STIRLING_PDF_HOSTNAME=${STIRLING_PDF_HOSTNAME}
       - UPTIME_KUMA_HOSTNAME=${UPTIME_KUMA_HOSTNAME}
       - WALLOS_HOSTNAME=${WALLOS_HOSTNAME}
+      - WG_EASY_HOSTNAME=${WG_EASY_HOSTNAME}
     healthcheck:
       test: ["CMD", "caddy", "validate", "--config", "/etc/caddy/Caddyfile"]
       interval: 60s

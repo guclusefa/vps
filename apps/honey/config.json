@@ -80,6 +80,12 @@
 			"desc": "Gestionnaire d'abonnements pour suivre tous les paiements récurrents en un seul endroit.",
 			"href": "https://wallos.cestfa.app",
 			"icon": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/wallos.png"
+		},
+		{
+			"name": "WireGuard VPN",
+			"desc": "Accès VPN sécurisé et chiffré vers votre VPS.",
+			"href": "https://vpn.cestfa.app",
+			"icon": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/wireguard.png"
 		}
 	]
 }

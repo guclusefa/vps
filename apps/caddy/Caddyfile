@@ -68,3 +68,8 @@
     import common
     reverse_proxy wallos:80
 }
+
+{$WG_EASY_HOSTNAME} {
+    import common
+    reverse_proxy wg-easy:51821
+}
