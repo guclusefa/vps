@@ -64,6 +64,12 @@
 			"icon": "https://raw.githubusercontent.com/mhdzumair/mediaflow-proxy/refs/heads/main/mediaflow_proxy/static/logo.png"
 		},
 		{
+			"name": "Stirling-PDF",
+			"desc": "Suite d'outils PDF auto-hébergée, robuste et complète pour gérer vos documents.",
+			"href": "https://pdf.cestfa.app",
+			"icon": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/stirling-pdf.png"
+		},
+		{
 			"name": "Uptime Kuma",
 			"desc": "Outil de surveillance de site web open-source pour vérifier la disponibilité et les performances de vos services auto-hébergés.",
 			"href": "https://uptime.cestfa.app",

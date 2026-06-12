@@ -9,10 +9,11 @@ include:
   - apps/ghostfolio/compose.yaml
   - apps/honey/compose.yaml
   - apps/mediaflow-proxy/compose.yaml
-  - apps/warp/compose.yaml
-  - apps/watchtower/compose.yaml
+  - apps/stirling-pdf/compose.yaml
   - apps/uptime-kuma/compose.yaml
   - apps/wallos/compose.yaml
+  - apps/warp/compose.yaml
+  - apps/watchtower/compose.yaml
 
 networks:
   default:

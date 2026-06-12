@@ -54,6 +54,11 @@
     reverse_proxy mediaflow-proxy:8888
 }
 
+{$STIRLING_PDF_HOSTNAME} {
+    import common
+    reverse_proxy stirling-pdf:8080
+}
+
 {$UPTIME_KUMA_HOSTNAME} {
     import common
     reverse_proxy uptime-kuma:3001

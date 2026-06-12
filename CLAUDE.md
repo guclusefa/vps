@@ -10,25 +10,26 @@ A self-hosted Docker stack for a personal VPS. All services run behind Caddy (re
 
 | Service | Image | Role |
 |---|---|---|
-| Caddy | `caddy:latest` | Reverse proxy, TLS |
 | AdGuard Home | `adguard/adguardhome:latest` | DNS + ad blocking |
 | AIOMetadata | `ghcr.io/cedya77/aiometadata:latest` | Stremio catalog & metadata generator |
 | AIOMetadata Cache | `redis:alpine` | Redis for AIOMetadata |
 | AIOStreams | `ghcr.io/viren070/aiostreams:latest` | Stremio addon aggregator |
 | Beszel | `henrygd/beszel:latest` | Monitoring dashboard |
 | Beszel Agent | `henrygd/beszel-agent:latest` | Host metrics (`network_mode: host`) |
+| Caddy | `caddy:latest` | Reverse proxy, TLS |
 | Dispatcharr | `ghcr.io/dispatcharr/dispatcharr:latest` | IPTV stream management (web) |
 | Dispatcharr Celery | `ghcr.io/dispatcharr/dispatcharr:latest` | IPTV stream management (workers) |
 | Filebrowser | `filebrowser/filebrowser:v2-alpine` | Web file manager (serves `/opt`) |
 | Ghostfolio | `ghostfolio/ghostfolio:latest` | Portfolio tracker |
-| Ghostfolio DB | `postgres:16-alpine` | Postgres for Ghostfolio |
 | Ghostfolio Cache | `redis:alpine` | Redis for Ghostfolio |
+| Ghostfolio DB | `postgres:16-alpine` | Postgres for Ghostfolio |
 | Honey | `ghcr.io/dani3l0/honey:latest` | Dashboard / start page |
 | MediaFlow Proxy | `ghcr.io/mhdzumair/mediaflow-proxy-light:latest` | Debrid media proxy |
-| Warp | `caomingjun/warp:latest` | Cloudflare HTTP proxy for MediaFlow |
-| Watchtower | `nickfedor/watchtower:latest` | Auto image updates |
+| Stirling-PDF | `stirlingtools/stirling-pdf:latest` | PDF manipulation tools |
 | Uptime Kuma | `louislam/uptime-kuma:latest` | Uptime monitoring & status page |
 | Wallos | `bellamy/wallos:latest` | Subscription tracker |
+| Warp | `caomingjun/warp:latest` | Cloudflare HTTP proxy for MediaFlow |
+| Watchtower | `nickfedor/watchtower:latest` | Auto image updates |
 
 ## Repo structure
 
@@ -90,10 +91,11 @@ HTTP/3 (QUIC) is enabled globally. All subdomains are derived from `.env` variab
 - `stop_grace_period` and `logging` on all services
 - Healthchecks on all services where meaningful
 - `restart: always` on critical services (Caddy, Warp, AdGuard, MediaFlow, Dispatcharr)
-- `restart: unless-stopped` on personal tools (Ghostfolio, Wallos, Honey, etc.)
+- `restart: unless-stopped` on personal tools (Ghostfolio, Wallos, Honey, Stirling-PDF, etc.)
 - No hardcoded secrets — `.env` only
 - `image: ...:latest` is intentional; Watchtower handles updates
 - No `deploy.resources` limits — let the host scheduler manage allocation
+- **Alphabetical Sorting:** Keep `.env`/`.env.example` subdomains, root `compose.yaml` includes, `apps/caddy/compose.yaml` environment variables, `apps/caddy/Caddyfile` reverse proxy blocks, and `apps/honey/config.json` services list sorted alphabetically.
 
 ## What to avoid
 

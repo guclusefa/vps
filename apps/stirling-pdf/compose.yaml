@@ -1,0 +1,30 @@
+services:
+  stirling-pdf:
+    image: stirlingtools/stirling-pdf:latest
+    container_name: stirling-pdf
+    restart: unless-stopped
+    expose:
+      - "8080"
+    volumes:
+      - ${DOCKER_DATA_DIR}/stirling-pdf/tessdata:/usr/share/tessdata
+      - ${DOCKER_DATA_DIR}/stirling-pdf/configs:/configs
+      - ${DOCKER_DATA_DIR}/stirling-pdf/customFiles:/customFiles
+      - ${DOCKER_DATA_DIR}/stirling-pdf/pipeline:/pipeline
+    environment:
+      - TZ=${TZ:-UTC}
+      - DOCKER_ENABLE_SECURITY=false
+      - SECURITY_ENABLELOGIN=false
+      - SYSTEM_MAXFILESIZE=250
+      - SYSTEM_FRONTENDURL=https://${STIRLING_PDF_HOSTNAME}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    stop_grace_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
