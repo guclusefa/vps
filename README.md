@@ -183,6 +183,24 @@ After the first stack launch:
 
 ---
 
+### 6. AdGuard DNS-over-TLS (Required for External Devices)
+
+Enables `adguard.$DOMAIN` as a Private DNS provider for mobile devices and remote clients.
+
+In AdGuard → **Settings** → **Encryption settings**:
+
+| Field | Value |
+|---|---|
+| Enable encryption | ✓ |
+| Server name | `adguard.$DOMAIN` |
+| Certificate path | `/etc/caddy-certs/caddy/certificates/acme-v02.api.letsencrypt.org-directory/adguard.$DOMAIN/adguard.$DOMAIN.crt` |
+| Private key path | `/etc/caddy-certs/caddy/certificates/acme-v02.api.letsencrypt.org-directory/adguard.$DOMAIN/adguard.$DOMAIN.key` |
+
+> [!NOTE]
+> This is a **one-time setup**. Because the certificate directory is mapped as a shared volume, AdGuard Home will automatically detect and load updated certificates when Caddy renews them.
+
+---
+
 ## Operations & Verification
 
 ```bash
