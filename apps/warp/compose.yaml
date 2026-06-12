@@ -8,7 +8,7 @@ services:
     volumes:
       - warp-data:/var/lib/cloudflare-warp
     environment:
-      - WARP_SLEEP=${WARP_SLEEP:-2}
+      - WARP_SLEEP=2
     cap_add:
       - NET_ADMIN
     sysctls:
@@ -24,8 +24,8 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5m"
-        max-file: "2"
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   warp-data:

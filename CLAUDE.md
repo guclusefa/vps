@@ -4,38 +4,7 @@ Context and conventions for AI-assisted work on this repo.
 
 ## What this repo is
 
-A self-hosted Docker stack for a personal VPS. All services run behind Caddy (reverse proxy + automatic TLS). One `.env` file drives the entire stack.
-
-## Stack
-
-| Service | Image | Role |
-|---|---|---|
-| AdGuard Home | `adguard/adguardhome:latest` | DNS + ad blocking |
-| AIOMetadata | `ghcr.io/cedya77/aiometadata:latest` | Stremio catalog & metadata generator |
-| AIOMetadata Cache | `redis:alpine` | Redis for AIOMetadata |
-| AIOStreams | `ghcr.io/viren070/aiostreams:latest` | Stremio addon aggregator |
-| Beszel | `henrygd/beszel:latest` | Monitoring dashboard |
-| Beszel Agent | `henrygd/beszel-agent:latest` | Host metrics (`network_mode: host`) |
-| Caddy | `caddy:latest` | Reverse proxy, TLS |
-| Comet | `g0ldyy/comet:latest` | Fast Stremio torrent addon (Rust) |
-| Dispatcharr | `ghcr.io/dispatcharr/dispatcharr:latest` | IPTV stream management (web) |
-| Dispatcharr Celery | `ghcr.io/dispatcharr/dispatcharr:latest` | IPTV stream management (workers) |
-| Filebrowser | `filebrowser/filebrowser:v2-alpine` | Web file manager (serves `/opt`) |
-| Ghostfolio | `ghostfolio/ghostfolio:latest` | Portfolio tracker |
-| Ghostfolio Cache | `redis:alpine` | Redis for Ghostfolio |
-| Ghostfolio DB | `postgres:16-alpine` | Postgres for Ghostfolio |
-| Honey | `ghcr.io/dani3l0/honey:latest` | Dashboard / start page |
-| MediaFlow Proxy | `ghcr.io/mhdzumair/mediaflow-proxy-light:latest` | Debrid media proxy |
-| MediaFusion | `mhdzumair/mediafusion:latest` | Multi-source Stremio addon (Rust) |
-| MediaFusion Cache | `redis:alpine` | Redis for MediaFusion |
-| MediaFusion DB | `postgres:16-alpine` | Postgres for MediaFusion |
-| MediaFusion Worker | `mhdzumair/mediafusion:latest` | Background worker for MediaFusion |
-| Stirling-PDF | `stirlingtools/stirling-pdf:latest` | PDF manipulation tools |
-| Uptime Kuma | `louislam/uptime-kuma:latest` | Uptime monitoring & status page |
-| Wallos | `bellamy/wallos:latest` | Subscription tracker |
-| Warp | `caomingjun/warp:latest` | Cloudflare HTTP proxy for MediaFlow |
-| Watchtower | `nickfedor/watchtower:latest` | Auto image updates |
-| WG-Easy | `ghcr.io/wg-easy/wg-easy:latest` | WireGuard VPN server + web UI |
+A self-hosted Docker stack for a personal VPS. All services run behind Caddy (reverse proxy + automatic TLS). One [.env](file:///home/ceest/dev/vps/.env) file drives the entire stack.
 
 ## Repo structure
 
@@ -58,7 +27,7 @@ Data is persisted under `$DOCKER_DATA_DIR` (default `/opt/docker/data`), never i
 
 ## Network
 
-All services share `vps_network` (defined in root `compose.yaml`). Services talk to each other by container name.
+All services share `vps_network` (defined in root [compose.yaml](file:///home/ceest/dev/vps/compose.yaml)). Services talk to each other by container name.
 
 Only Caddy and AdGuard expose host ports (`80`, `443`, `53`, `853`). All other services use `expose:` only — never `ports:`.
 
@@ -90,18 +59,18 @@ The Caddyfile defines a `(common)` snippet applied to every vhost:
 }
 ```
 
-HTTP/3 (QUIC) is enabled globally. All subdomains are derived from `.env` variables and injected via `environment:` in the Caddy compose fragment.
+HTTP/3 (QUIC) is enabled globally. All subdomains are derived from [.env](file:///home/ceest/dev/vps/.env) variables and injected via `environment:` in the Caddy compose fragment.
 
 ## Conventions
 
 - `stop_grace_period` and `logging` on all services
 - Healthchecks on all services where meaningful
-- `restart: always` on critical services (Caddy, Warp, AdGuard, MediaFlow, Dispatcharr)
-- `restart: unless-stopped` on personal tools (Ghostfolio, Wallos, Honey, Stirling-PDF, etc.)
-- No hardcoded secrets — `.env` only
+- `restart: always` on critical services (Caddy, Warp, AdGuard, MediaFlow, Dispatcharr, WG-Easy)
+- `restart: unless-stopped` on personal tools (Ghostfolio, Wallos, Honey, Stirling-PDF, Comet, MediaFusion, etc.)
+- No hardcoded secrets — [.env](file:///home/ceest/dev/vps/.env) only
 - `image: ...:latest` is intentional; Watchtower handles updates
 - No `deploy.resources` limits — let the host scheduler manage allocation
-- **Alphabetical Sorting:** Keep `.env`/`.env.example` subdomains, root `compose.yaml` includes, `apps/caddy/compose.yaml` environment variables, `apps/caddy/Caddyfile` reverse proxy blocks, and `apps/honey/config.json` services list sorted alphabetically.
+- **Alphabetical Sorting:** Keep [.env](file:///home/ceest/dev/vps/.env)/[.env.example](file:///home/ceest/dev/vps/.env.example) subdomains, root [compose.yaml](file:///home/ceest/dev/vps/compose.yaml) includes, [apps/caddy/compose.yaml](file:///home/ceest/dev/vps/apps/caddy/compose.yaml) environment variables, [apps/caddy/Caddyfile](file:///home/ceest/dev/vps/apps/caddy/Caddyfile) reverse proxy blocks, and [apps/honey/config.json](file:///home/ceest/dev/vps/apps/honey/config.json) services list sorted alphabetically.
 
 ## What to avoid
 

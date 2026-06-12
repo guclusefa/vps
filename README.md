@@ -1,18 +1,43 @@
 # VPS Stack
 
-Self-hosted Docker stack with Caddy reverse proxy and automatic TLS. Services include AdGuard Home, Stremio addons (AIOStreams, Comet, MediaFusion), a portfolio tracker, Stirling-PDF, WireGuard VPN, and more. A single `.env` file configures the entire stack.
+A self-hosted Docker stack for a personal VPS. All services run behind Caddy (reverse proxy + automatic TLS). A single [.env](file:///home/ceest/dev/vps/.env) file configures the entire stack.
 
-## Setup
+## Services Overview
 
-### 1. Host preparation
+| Service | Subdomain | Purpose |
+|---|---|---|
+| **AdGuard Home** | `adguard.$DOMAIN` | Network-wide DNS server & ad blocking (with DNS-over-TLS) |
+| **AIOMetadata** | `aiometadata.$DOMAIN` | Stremio catalog & metadata enrichment server |
+| **AIOStreams** | `aiostreams.$DOMAIN` | Stremio addon aggregator and filter |
+| **Beszel** | `beszel.$DOMAIN` | Lightweight resource and container monitoring hub |
+| **Comet** | `comet.$DOMAIN` | High-performance Stremio torrent addon (SQLite) |
+| **Dispatcharr** | `dispatcharr.$DOMAIN` | IPTV playlist router and celery-based stream proxy |
+| **Filebrowser** | `files.$DOMAIN` | Web file manager to administer configuration files |
+| **Ghostfolio** | `ghostfolio.$DOMAIN` | Portfolio tracker and personal wealth manager |
+| **Honey** | `$DOMAIN` | Dashboard / start page listing all services |
+| **MediaFlow Proxy** | `mediaflow.$DOMAIN` | High-performance edge proxy for Debrid streams |
+| **MediaFusion** | `mediafusion.$DOMAIN` | Stremio multi-source addon (crawlers + TV/Live Sports) |
+| **Stirling-PDF** | `pdf.$DOMAIN` | Browser-based PDF manipulation tools |
+| **Uptime Kuma** | `uptime.$DOMAIN` | Service uptime monitoring and alerting |
+| **Wallos** | `wallos.$DOMAIN` | Recurring subscription tracker |
+| **WireGuard VPN** | `vpn.$DOMAIN` | Encrypted tunnel (WG-Easy) to secure all local traffic |
+
+---
+
+## Setup Guide
+
+### 1. Host Preparation
+
+Run these commands on your fresh VPS host to prepare the environment:
 
 ```bash
+# Install Docker
 sudo apt-get update && sudo apt-get install -y curl git
 curl -fsSL https://get.docker.com | sudo sh
 sudo usermod -aG docker $USER
 ```
 
-**Free port 53 for AdGuard:**
+**Free port 53 (disable systemd-resolved DNS stub):**
 
 ```bash
 sudo systemctl stop systemd-resolved
@@ -20,7 +45,7 @@ sudo systemctl disable systemd-resolved
 echo "nameserver 1.1.1.1" | sudo tee /etc/resolv.conf
 ```
 
-**Swap:**
+**Create 2GB swap file (essential for small VPS hosts):**
 
 ```bash
 sudo fallocate -l 2G /swapfile
@@ -30,7 +55,7 @@ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 ```
 
-**System tuning:**
+**System memory tuning (required for Redis and databases):**
 
 ```bash
 echo 'vm.overcommit_memory=1' | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
@@ -41,17 +66,17 @@ printf '[Journal]\nSystemMaxUse=100M\nRuntimeMaxUse=50M\n' | \
 sudo systemctl restart systemd-journald
 ```
 
-**Firewall:**
+**Firewall configuration:**
 
 ```bash
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
-sudo ufw allow 22/tcp
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
-sudo ufw allow 443/udp
-sudo ufw allow 853/tcp
-sudo ufw allow 51820/udp
+sudo ufw allow 22/tcp          # SSH
+sudo ufw allow 80/tcp          # HTTP
+sudo ufw allow 443/tcp         # HTTPS
+sudo ufw allow 443/udp         # HTTP/3 (QUIC)
+sudo ufw allow 853/tcp         # DNS-over-TLS (AdGuard Private DNS)
+sudo ufw allow 51820/udp       # WireGuard VPN tunnel
 sudo ufw --force enable
 ```
 
@@ -64,7 +89,9 @@ sudo systemctl restart docker
 
 ---
 
-### 2. Configure
+### 2. Configure Environment
+
+Clone the repository and copy the environment template:
 
 ```bash
 sudo git clone https://github.com/guclusefa/vps.git /opt/docker
@@ -73,7 +100,7 @@ cd /opt/docker
 cp .env.example .env
 ```
 
-Edit `.env` and fill in your domain and secrets. Generate each secret with:
+Edit your local [.env](file:///home/ceest/dev/vps/.env) and fill in your `DOMAIN` and secrets. You can generate random 32-character hex secrets using:
 
 ```bash
 openssl rand -hex 32
@@ -81,9 +108,9 @@ openssl rand -hex 32
 
 ---
 
-### 3. First launch
+### 3. First Launch: AdGuard Home
 
-AdGuard's setup wizard runs on port `3000`. Before starting, open `.env` and temporarily set the port:
+AdGuard's setup wizard runs on port `3000`. Before starting, open your local [.env](file:///home/ceest/dev/vps/.env) file and temporarily change `ADGUARD_PORT`:
 
 ```ini
 ADGUARD_PORT=3000
@@ -95,12 +122,11 @@ Start the stack:
 docker compose up -d
 ```
 
-Open `https://adguard.$DOMAIN` and complete the wizard. Set:
+Open `https://adguard.$DOMAIN` in your browser and complete the wizard. Make sure to set:
+*   **Web interface port:** `80`
+*   **DNS server port:** `53`
 
-- **Web interface port:** `80`
-- **DNS server port:** `53`
-
-Once done, restore `ADGUARD_PORT` to `80` in `.env` and apply the changes by recreating Caddy:
+Once completed, open your [.env](file:///home/ceest/dev/vps/.env) file, restore `ADGUARD_PORT=80`, and apply changes by recreating the Caddy container:
 
 ```bash
 docker compose up -d caddy
@@ -108,35 +134,52 @@ docker compose up -d caddy
 
 ---
 
-### 4. Beszel agent
+### 4. WireGuard VPN (WG-Easy) Password Setup
 
-After first launch:
+WG-Easy requires a secure bcrypt hash of your password instead of plain text:
 
-1. Open `https://beszel.$DOMAIN` → create admin account → **Add System**
-2. Copy the `KEY` and `TOKEN` into `.env`
-3. Restart the agent: `docker compose up -d beszel-agent`
-4. Set **Host / IP** to `/beszel_socket/beszel.sock`
+1.  Generate the password hash (replace `yourpassword` with your desired password):
+    ```bash
+    docker run -it ghcr.io/wg-easy/wg-easy wgpw yourpassword
+    ```
+2.  Copy the output string (e.g. `$2a$12$...`).
+3.  Open your local [.env](file:///home/ceest/dev/vps/.env) file and set `WG_EASY_PASSWORD_HASH`.
+    
+    > [!IMPORTANT]
+    > You must escape all dollar signs (`$`) in your password hash by doubling them (e.g., `$$2a$$12$$...`) in the [.env](file:///home/ceest/dev/vps/.env) file, otherwise Docker Compose will try to interpolate them.
 
----
-
-### 5. AdGuard DNS-over-TLS (Required for External Devices)
-
-Enables `adguard.$DOMAIN` as a Private DNS provider.
-
-In AdGuard → **Settings → Encryption settings**:
-
-| Field | Value |
-|---|---|
-| Enable encryption | ✓ |
-| Server name | `adguard.$DOMAIN` |
-| Certificate path | `/etc/caddy-certs/caddy/certificates/acme-v02.api.letsencrypt.org-directory/adguard.$DOMAIN/adguard.$DOMAIN.crt` |
-| Private key path | `/etc/caddy-certs/caddy/certificates/acme-v02.api.letsencrypt.org-directory/adguard.$DOMAIN/adguard.$DOMAIN.key` |
+4.  Apply the changes:
+    ```bash
+    docker compose up -d wg-easy
+    ```
+5.  Access the VPN dashboard at `https://vpn.$DOMAIN` to generate client configurations and QR codes.
 
 ---
 
-## Verify
+### 5. Beszel Agent Integration
+
+After the first stack launch:
+
+1.  Open `https://beszel.$DOMAIN` and create your admin account.
+2.  Click **Add System**, choose a system name, and copy the provided `KEY` and `TOKEN` strings.
+3.  Open your local [.env](file:///home/ceest/dev/vps/.env) file and paste them into `BESZEL_AGENT_KEY` and `BESZEL_AGENT_TOKEN`.
+4.  Restart the agent container to apply settings:
+    ```bash
+    docker compose up -d beszel-agent
+    ```
+5.  In the Beszel web panel, set the **Host / IP** address for your system to:
+    ```
+    /beszel_socket/beszel.sock
+    ```
+
+---
+
+## Operations & Verification
 
 ```bash
+# Verify all container statuses
 docker compose ps
+
+# Check host and container memory usage
 docker stats --no-stream
 ```

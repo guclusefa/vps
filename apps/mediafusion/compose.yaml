@@ -11,7 +11,7 @@ services:
       - REDIS_URL=redis://mediafusion-redis:6379/0
       - SECRET_KEY=${MEDIAFUSION_SECRET_KEY}
       - API_PASSWORD=${MEDIAFUSION_API_PASSWORD}
-      - CONTACT_EMAIL=${MEDIAFUSION_CONTACT_EMAIL}
+      - CONTACT_EMAIL=admin@${DOMAIN}
     depends_on:
       mediafusion-postgres:
         condition: service_healthy
@@ -27,8 +27,8 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5m"
-        max-file: "2"
+        max-size: "10m"
+        max-file: "3"
 
   mediafusion-worker:
     image: mhdzumair/mediafusion:latest
@@ -41,7 +41,7 @@ services:
       - REDIS_URL=redis://mediafusion-redis:6379/0
       - SECRET_KEY=${MEDIAFUSION_SECRET_KEY}
       - API_PASSWORD=${MEDIAFUSION_API_PASSWORD}
-      - CONTACT_EMAIL=${MEDIAFUSION_CONTACT_EMAIL}
+      - CONTACT_EMAIL=admin@${DOMAIN}
     depends_on:
       mediafusion-postgres:
         condition: service_healthy
@@ -51,8 +51,8 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5m"
-        max-file: "2"
+        max-size: "10m"
+        max-file: "3"
 
   mediafusion-postgres:
     image: postgres:16-alpine
@@ -74,8 +74,8 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5m"
-        max-file: "2"
+        max-size: "10m"
+        max-file: "3"
 
   mediafusion-redis:
     image: redis:alpine
@@ -91,5 +91,5 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5m"
-        max-file: "2"
+        max-size: "10m"
+        max-file: "3"

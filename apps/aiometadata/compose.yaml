@@ -16,7 +16,7 @@ services:
       - ADDON_PASSWORD=${AIOMETADATA_ADDON_PASSWORD}
       - TRAKT_CLIENT_ID=${AIOMETADATA_TRAKT_CLIENT_ID}
       - TRAKT_CLIENT_SECRET=${AIOMETADATA_TRAKT_CLIENT_SECRET}
-      - TRAKT_REDIRECT_URI=${AIOMETADATA_TRAKT_REDIRECT_URI}
+      - TRAKT_REDIRECT_URI=https://${AIOMETADATA_HOSTNAME}/api/auth/trakt/callback
     depends_on:
       aiometadata-redis:
         condition: service_healthy
@@ -30,8 +30,8 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5m"
-        max-file: "2"
+        max-size: "10m"
+        max-file: "3"
 
   aiometadata-redis:
     image: redis:alpine
@@ -47,5 +47,5 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5m"
-        max-file: "2"
+        max-size: "10m"
+        max-file: "3"

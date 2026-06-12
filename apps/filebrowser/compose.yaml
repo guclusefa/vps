@@ -3,14 +3,14 @@ services:
     image: filebrowser/filebrowser:v2-alpine
     container_name: filebrowser
     restart: unless-stopped
+    command: -d /config/filebrowser.db -p 80
     expose:
       - "80"
-    environment:
-      - TZ=${TZ:-UTC}
-    command: -d /config/filebrowser.db -p 80
     volumes:
       - /opt:/srv
       - ${DOCKER_DATA_DIR}/filebrowser:/config
+    environment:
+      - TZ=${TZ:-UTC}
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:80/health"]
       interval: 30s
@@ -21,5 +21,5 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "5m"
-        max-file: "2"
+        max-size: "10m"
+        max-file: "3"
