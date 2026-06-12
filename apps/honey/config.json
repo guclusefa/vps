@@ -69,12 +69,7 @@
 			"href": "https://mediaflow.cestfa.app",
 			"icon": "https://raw.githubusercontent.com/mhdzumair/mediaflow-proxy/refs/heads/main/mediaflow_proxy/static/logo.png"
 		},
-		{
-			"name": "MediaFusion",
-			"desc": "Addon Stremio multi-sources pour les torrents, l'IPTV et les sports en direct.",
-			"href": "https://mediafusion.cestfa.app",
-			"icon": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/mediafusion.png"
-		},
+
 		{
 			"name": "Stirling-PDF",
 			"desc": "Suite d'outils PDF auto-hébergée, robuste et complète pour gérer vos documents.",

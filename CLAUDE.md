@@ -66,7 +66,7 @@ HTTP/3 (QUIC) is enabled globally. All subdomains are derived from [.env](file:/
 - `logging` is handled globally by `daemon.json`; custom `stop_grace_period` is used only when overriding the default `10s`.
 - No custom healthchecks (rely on image defaults)
 - `restart: always` on critical services (Caddy, Warp, AdGuard, MediaFlow, Dispatcharr, WG-Easy)
-- `restart: unless-stopped` on personal tools (Ghostfolio, Wallos, Honey, Stirling-PDF, Comet, MediaFusion, etc.)
+- `restart: unless-stopped` on personal tools (Ghostfolio, Wallos, Honey, Stirling-PDF, Comet, etc.)
 - No hardcoded secrets — [.env](file:///home/ceest/dev/vps/.env) only
 - `image: ...:latest` is intentional; Watchtower handles updates
 - No `deploy.resources` limits — let the host scheduler manage allocation

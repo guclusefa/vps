@@ -16,7 +16,7 @@ A self-hosted Docker stack for a personal VPS. All services run behind Caddy (re
 | **Ghostfolio** | `ghostfolio.$DOMAIN` | Portfolio tracker and personal wealth manager |
 | **Honey** | `$DOMAIN` | Dashboard / start page listing all services |
 | **MediaFlow Proxy** | `mediaflow.$DOMAIN` | High-performance edge proxy for Debrid streams |
-| **MediaFusion** | `mediafusion.$DOMAIN` | Stremio multi-source addon (crawlers + TV/Live Sports) |
+
 | **Stirling-PDF** | `pdf.$DOMAIN` | Browser-based PDF manipulation tools |
 | **Uptime Kuma** | `uptime.$DOMAIN` | Service uptime monitoring and alerting |
 | **Wallos** | `wallos.$DOMAIN` | Recurring subscription tracker |
