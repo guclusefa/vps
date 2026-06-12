@@ -4,11 +4,13 @@ include:
   - apps/aiostreams/compose.yaml
   - apps/beszel/compose.yaml
   - apps/caddy/compose.yaml
+  - apps/comet/compose.yaml
   - apps/dispatcharr/compose.yaml
   - apps/filebrowser/compose.yaml
   - apps/ghostfolio/compose.yaml
   - apps/honey/compose.yaml
   - apps/mediaflow-proxy/compose.yaml
+  - apps/mediafusion/compose.yaml
   - apps/stirling-pdf/compose.yaml
   - apps/uptime-kuma/compose.yaml
   - apps/wallos/compose.yaml

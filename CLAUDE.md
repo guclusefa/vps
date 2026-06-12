@@ -17,6 +17,7 @@ A self-hosted Docker stack for a personal VPS. All services run behind Caddy (re
 | Beszel | `henrygd/beszel:latest` | Monitoring dashboard |
 | Beszel Agent | `henrygd/beszel-agent:latest` | Host metrics (`network_mode: host`) |
 | Caddy | `caddy:latest` | Reverse proxy, TLS |
+| Comet | `g0ldyy/comet:latest` | Fast Stremio torrent addon (Rust) |
 | Dispatcharr | `ghcr.io/dispatcharr/dispatcharr:latest` | IPTV stream management (web) |
 | Dispatcharr Celery | `ghcr.io/dispatcharr/dispatcharr:latest` | IPTV stream management (workers) |
 | Filebrowser | `filebrowser/filebrowser:v2-alpine` | Web file manager (serves `/opt`) |
@@ -25,6 +26,10 @@ A self-hosted Docker stack for a personal VPS. All services run behind Caddy (re
 | Ghostfolio DB | `postgres:16-alpine` | Postgres for Ghostfolio |
 | Honey | `ghcr.io/dani3l0/honey:latest` | Dashboard / start page |
 | MediaFlow Proxy | `ghcr.io/mhdzumair/mediaflow-proxy-light:latest` | Debrid media proxy |
+| MediaFusion | `mhdzumair/mediafusion:latest` | Multi-source Stremio addon (Rust) |
+| MediaFusion Cache | `redis:alpine` | Redis for MediaFusion |
+| MediaFusion DB | `postgres:16-alpine` | Postgres for MediaFusion |
+| MediaFusion Worker | `mhdzumair/mediafusion:latest` | Background worker for MediaFusion |
 | Stirling-PDF | `stirlingtools/stirling-pdf:latest` | PDF manipulation tools |
 | Uptime Kuma | `louislam/uptime-kuma:latest` | Uptime monitoring & status page |
 | Wallos | `bellamy/wallos:latest` | Subscription tracker |

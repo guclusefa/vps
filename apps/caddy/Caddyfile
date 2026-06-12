@@ -29,6 +29,11 @@
     reverse_proxy beszel:8090
 }
 
+{$COMET_HOSTNAME} {
+    import common
+    reverse_proxy comet:2020
+}
+
 {$DISPATCHARR_HOSTNAME} {
     import common
     reverse_proxy dispatcharr:9191
@@ -52,6 +57,11 @@
 {$MEDIAFLOW_PROXY_HOSTNAME} {
     import common
     reverse_proxy mediaflow-proxy:8888
+}
+
+{$MEDIAFUSION_HOSTNAME} {
+    import common
+    reverse_proxy mediafusion-api:8000
 }
 
 {$STIRLING_PDF_HOSTNAME} {

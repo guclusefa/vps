@@ -1,0 +1,95 @@
+services:
+  mediafusion-api:
+    image: mhdzumair/mediafusion:latest
+    container_name: mediafusion-api
+    restart: unless-stopped
+    expose:
+      - "8000"
+    environment:
+      - TZ=${TZ:-UTC}
+      - POSTGRES_URI=postgresql://mediafusion:${MEDIAFUSION_POSTGRES_PASSWORD}@mediafusion-postgres:5432/mediafusion
+      - REDIS_URL=redis://mediafusion-redis:6379/0
+      - SECRET_KEY=${MEDIAFUSION_SECRET_KEY}
+      - API_PASSWORD=${MEDIAFUSION_API_PASSWORD}
+      - CONTACT_EMAIL=${MEDIAFUSION_CONTACT_EMAIL}
+    depends_on:
+      mediafusion-postgres:
+        condition: service_healthy
+      mediafusion-redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    stop_grace_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+  mediafusion-worker:
+    image: mhdzumair/mediafusion:latest
+    container_name: mediafusion-worker
+    command: ["/usr/local/bin/mediafusion-worker"]
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ:-UTC}
+      - POSTGRES_URI=postgresql://mediafusion:${MEDIAFUSION_POSTGRES_PASSWORD}@mediafusion-postgres:5432/mediafusion
+      - REDIS_URL=redis://mediafusion-redis:6379/0
+      - SECRET_KEY=${MEDIAFUSION_SECRET_KEY}
+      - API_PASSWORD=${MEDIAFUSION_API_PASSWORD}
+      - CONTACT_EMAIL=${MEDIAFUSION_CONTACT_EMAIL}
+    depends_on:
+      mediafusion-postgres:
+        condition: service_healthy
+      mediafusion-redis:
+        condition: service_healthy
+    stop_grace_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+  mediafusion-postgres:
+    image: postgres:16-alpine
+    container_name: mediafusion-postgres
+    restart: unless-stopped
+    volumes:
+      - ${DOCKER_DATA_DIR}/mediafusion/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=mediafusion
+      - POSTGRES_USER=mediafusion
+      - POSTGRES_PASSWORD=${MEDIAFUSION_POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mediafusion -d mediafusion"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    stop_grace_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+  mediafusion-redis:
+    image: redis:alpine
+    container_name: mediafusion-redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    stop_grace_period: 5s
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"

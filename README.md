@@ -1,6 +1,6 @@
 # VPS Stack
 
-Self-hosted Docker stack with Caddy reverse proxy and automatic TLS. Services include AdGuard Home, Stremio addons, a portfolio tracker, Stirling-PDF, WireGuard VPN, and more. A single `.env` file configures the entire stack.
+Self-hosted Docker stack with Caddy reverse proxy and automatic TLS. Services include AdGuard Home, Stremio addons (AIOStreams, Comet, MediaFusion), a portfolio tracker, Stirling-PDF, WireGuard VPN, and more. A single `.env` file configures the entire stack.
 
 ## Setup
 
