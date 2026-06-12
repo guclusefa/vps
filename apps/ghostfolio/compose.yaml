@@ -20,7 +20,7 @@ services:
       ghostfolio-redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -fs http://localhost:3333/api/v1/health"]
+      test: ["CMD-SHELL", "curl -fs http://127.0.0.1:3333/api/v1/health"]
       interval: 30s
       timeout: 10s
       retries: 5
