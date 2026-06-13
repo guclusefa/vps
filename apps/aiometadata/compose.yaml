@@ -16,9 +16,16 @@ services:
       - TRAKT_CLIENT_SECRET=${AIOMETADATA_TRAKT_CLIENT_SECRET}
       - TRAKT_REDIRECT_URI=https://${AIOMETADATA_HOSTNAME}/api/auth/trakt/callback
     depends_on:
-      - aiometadata-redis
+      aiometadata-redis:
+        condition: service_healthy
 
   aiometadata-redis:
     image: redis:alpine
     container_name: aiometadata-redis
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

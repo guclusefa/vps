@@ -9,6 +9,12 @@ services:
     environment:
       - TZ=${TZ:-UTC}
       - APP_URL=https://${BESZEL_HOSTNAME}
+    healthcheck:
+      test: ["CMD", "/beszel", "health", "--url", "http://localhost:8090"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
   beszel-agent:
     image: henrygd/beszel-agent:latest
@@ -24,3 +30,9 @@ services:
       - LISTEN=/beszel_socket/beszel.sock
       - KEY=${BESZEL_AGENT_KEY}
       - TOKEN=${BESZEL_AGENT_TOKEN}
+    healthcheck:
+      test: ["CMD", "/agent", "health"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
