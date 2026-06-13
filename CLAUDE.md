@@ -64,7 +64,6 @@ HTTP/3 (QUIC) is enabled globally. All subdomains are derived from [.env](file:/
 ## Conventions
 
 - `logging` is handled globally by `daemon.json`; custom `stop_grace_period` is used only when overriding the default `10s`.
-- No custom healthchecks (rely on image defaults)
 - `restart: always` on critical services (Caddy, Warp, AdGuard, MediaFlow, Dispatcharr, WG-Easy)
 - `restart: unless-stopped` on personal tools (Ghostfolio, Wallos, Honey, Stirling-PDF, etc.)
 - No hardcoded secrets — [.env](file:///home/ceest/dev/vps/.env) only
@@ -72,12 +71,34 @@ HTTP/3 (QUIC) is enabled globally. All subdomains are derived from [.env](file:/
 - No `deploy.resources` limits — let the host scheduler manage allocation
 - **Alphabetical Sorting:** Keep [.env](file:///home/ceest/dev/vps/.env)/[.env.example](file:///home/ceest/dev/vps/.env.example) subdomains, root [compose.yaml](file:///home/ceest/dev/vps/compose.yaml) includes, [apps/caddy/compose.yaml](file:///home/ceest/dev/vps/apps/caddy/compose.yaml) environment variables, [apps/caddy/Caddyfile](file:///home/ceest/dev/vps/apps/caddy/Caddyfile) reverse proxy blocks, and [apps/honey/config.json](file:///home/ceest/dev/vps/apps/honey/config.json) services list sorted alphabetically.
 
+## Healthchecks
+
+Healthchecks are added where a reliable, officially-documented or universally-standard probe exists. Do not invent endpoints — verify against the upstream repo or Docker Hub before adding.
+
+| Service | Test command | Notes |
+|---|---|---|
+| `caddy` | `caddy validate --config /etc/caddy/Caddyfile` | Uses caddy binary itself — no curl/wget needed |
+| `adguard` | `wget -qO- http://localhost:80` | Port 80 = post-setup; port 3000 during wizard |
+| `dispatcharr` | `curl -fs http://localhost:9191/health/` | Official `/health/` endpoint |
+| `ghostfolio` | `curl -f http://localhost:3333/api/v1/health` | Official unauthenticated endpoint |
+| `ghostfolio-db` | `pg_isready -U $POSTGRES_USER -d $POSTGRES_DB` | Universal postgres standard |
+| `ghostfolio-redis` | `redis-cli -a $REDIS_PASSWORD --no-auth-warning ping \| grep PONG` | Auth-aware; REDIS_PASSWORD exposed via `environment:` |
+| `aiometadata-redis` | `redis-cli ping` | No auth on this instance |
+| `beszel` | `/beszel health --url http://localhost:8090` | Official binary subcommand (distroless image) |
+| `beszel-agent` | `/agent health` | Official binary subcommand (distroless image) |
+| `filebrowser` | `wget --no-verbose --tries=1 --spider http://localhost:80/` | Alpine image — wget available |
+| `warp`, `honey`, `uptime-kuma`, `watchtower`, `wallos`, `aiostreams`, `stirling-pdf`, `aiometadata`, `wg-easy` | — | Already healthy via image built-in HEALTHCHECK |
+| `mediaflow-proxy` | — | No healthcheck: `/health` endpoint exists but tool availability in minimal Rust image is unverified |
+
+When adding a healthcheck to a service that has dependencies (e.g. Redis, Postgres), also upgrade `depends_on` to use `condition: service_healthy` so the dependent service waits for a ready backing service.
+
 ## What to avoid
 
 - `ports:` on internal services
 - Separate networks in per-app compose files
 - Docker socket mounted read-write except on Watchtower
 - Data persisted inside containers
+- **Running `docker compose` locally** — this repo is deployed on a remote VPS. Never run `docker compose up`, `docker compose down`, `docker compose pull`, or any other `docker compose` command from this machine. All stack operations must be performed on the VPS.
 
 ## Common operations
 
