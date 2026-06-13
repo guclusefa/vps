@@ -4,7 +4,6 @@ services:
     container_name: honey
     restart: unless-stopped
     user: "${PUID}:${PGID}"
-
     volumes:
       - ./config.json:/app/dist/config/config.json:ro
       - ${DOCKER_DATA_DIR}/honey:/app/dist/img/custom

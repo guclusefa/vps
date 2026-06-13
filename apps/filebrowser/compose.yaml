@@ -4,7 +4,6 @@ services:
     container_name: filebrowser
     restart: unless-stopped
     command: -d /config/filebrowser.db -p 80
-
     volumes:
       - /opt:/srv
       - ${DOCKER_DATA_DIR}/filebrowser:/config

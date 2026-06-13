@@ -3,7 +3,6 @@ services:
     image: stirlingtools/stirling-pdf:latest
     container_name: stirling-pdf
     restart: unless-stopped
-
     volumes:
       - ${DOCKER_DATA_DIR}/stirling-pdf/tessdata:/usr/share/tessdata
       - ${DOCKER_DATA_DIR}/stirling-pdf/configs:/configs

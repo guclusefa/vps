@@ -3,7 +3,6 @@ services:
     image: henrygd/beszel:latest
     container_name: beszel
     restart: unless-stopped
-
     volumes:
       - ${DOCKER_DATA_DIR}/beszel:/beszel_data
       - ${DOCKER_DATA_DIR}/beszel-socket:/beszel_socket

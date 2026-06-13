@@ -7,7 +7,6 @@ services:
       - "127.0.0.1:53:53/udp"
       - "127.0.0.1:53:53/tcp"
       - "853:853/tcp"
-
     volumes:
       - ${DOCKER_DATA_DIR}/adguard/work:/opt/adguardhome/work
       - ${DOCKER_DATA_DIR}/adguard/config:/opt/adguardhome/conf
