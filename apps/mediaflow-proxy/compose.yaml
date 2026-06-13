@@ -3,7 +3,6 @@ services:
     image: ghcr.io/mhdzumair/mediaflow-proxy-light:latest
     container_name: mediaflow-proxy
     restart: always
-
     volumes:
       - ./config.toml:/app/config.toml:ro
     environment:
@@ -12,4 +11,3 @@ services:
       - CONFIG_PATH=/app/config.toml
     depends_on:
       - warp
-

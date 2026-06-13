@@ -10,6 +10,3 @@ services:
       - ${DOCKER_DATA_DIR}/honey:/app/dist/img/custom
     environment:
       - TZ=${TZ:-UTC}
-
-    stop_grace_period: 5s
-

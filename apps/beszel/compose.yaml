@@ -11,8 +11,6 @@ services:
       - TZ=${TZ:-UTC}
       - APP_URL=https://${BESZEL_HOSTNAME}
 
-
-
   beszel-agent:
     image: henrygd/beszel-agent:latest
     container_name: beszel-agent
@@ -27,6 +25,3 @@ services:
       - LISTEN=/beszel_socket/beszel.sock
       - KEY=${BESZEL_AGENT_KEY}
       - TOKEN=${BESZEL_AGENT_TOKEN}
-
-    stop_grace_period: 5s
-

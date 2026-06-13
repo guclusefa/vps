@@ -8,5 +8,3 @@ services:
       - ${DOCKER_DATA_DIR}/uptime-kuma:/app/data
     environment:
       - TZ=${TZ:-UTC}
-
-

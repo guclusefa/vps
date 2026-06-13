@@ -5,7 +5,6 @@ services:
     restart: always
     ports:
       - "51820:51820/udp"
-
     volumes:
       - ${DOCKER_DATA_DIR}/wg-easy:/etc/wireguard
     environment:
@@ -20,5 +19,3 @@ services:
     sysctls:
       - net.ipv4.ip_forward=1
       - net.ipv4.conf.all.src_valid_mark=1
-
-

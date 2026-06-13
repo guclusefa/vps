@@ -10,7 +10,6 @@ A self-hosted Docker stack for a personal VPS. All services run behind Caddy (re
 | **AIOMetadata** | `aiometadata.$DOMAIN` | Stremio catalog & metadata enrichment server |
 | **AIOStreams** | `aiostreams.$DOMAIN` | Stremio addon aggregator and filter |
 | **Beszel** | `beszel.$DOMAIN` | Lightweight resource and container monitoring hub |
-| **Comet** | `comet.$DOMAIN` | High-performance Stremio torrent addon (SQLite) |
 | **Dispatcharr** | `dispatcharr.$DOMAIN` | IPTV playlist router and celery-based stream proxy |
 | **Filebrowser** | `files.$DOMAIN` | Web file manager to administer configuration files |
 | **Ghostfolio** | `ghostfolio.$DOMAIN` | Portfolio tracker and personal wealth manager |

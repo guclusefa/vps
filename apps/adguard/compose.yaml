@@ -14,5 +14,3 @@ services:
       - ${DOCKER_DATA_DIR}/caddy/data:/etc/caddy-certs:ro
     environment:
       - TZ=${TZ:-UTC}
-
-

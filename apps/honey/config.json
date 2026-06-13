@@ -40,12 +40,6 @@
 			"icon": "https://raw.githubusercontent.com/henrygd/beszel/refs/heads/main/internal/site/public/static/icon.png"
 		},
 		{
-			"name": "Comet",
-			"desc": "Indexeur de torrents et addon Stremio ultra-rapide écrit en Rust.",
-			"href": "https://comet.cestfa.app",
-			"icon": "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/comet.png"
-		},
-		{
 			"name": "Dispatcharr",
 			"desc": "Routeur de flux de listes de lecture IPTV et gestionnaire de proxy.",
 			"href": "https://dispatcharr.cestfa.app",

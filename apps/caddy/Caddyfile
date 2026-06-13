@@ -29,11 +29,6 @@
     reverse_proxy beszel:8090
 }
 
-{$COMET_HOSTNAME} {
-    import common
-    reverse_proxy comet:2020
-}
-
 {$DISPATCHARR_HOSTNAME} {
     import common
     reverse_proxy dispatcharr:9191

@@ -9,5 +9,3 @@ services:
       - ${DOCKER_DATA_DIR}/wallos/logos:/var/www/html/images/uploads/logos
     environment:
       - TZ=${TZ:-UTC}
-    stop_grace_period: 5s
-

@@ -19,11 +19,7 @@ services:
     depends_on:
       - aiometadata-redis
 
-
   aiometadata-redis:
     image: redis:alpine
     container_name: aiometadata-redis
     restart: unless-stopped
-
-    stop_grace_period: 5s
-

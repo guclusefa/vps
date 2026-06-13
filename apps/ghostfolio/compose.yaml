@@ -46,6 +46,3 @@ services:
     container_name: ghostfolio-redis
     restart: unless-stopped
     command: redis-server --requirepass ${GHOSTFOLIO_REDIS_PASSWORD}
-
-    stop_grace_period: 5s
-

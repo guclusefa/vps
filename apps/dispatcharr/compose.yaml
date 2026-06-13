@@ -3,7 +3,6 @@ services:
     image: ghcr.io/dispatcharr/dispatcharr:latest
     container_name: dispatcharr
     restart: always
-
     volumes:
       - ${DOCKER_DATA_DIR}/dispatcharr:/data
     environment:
@@ -12,5 +11,4 @@ services:
       - REDIS_HOST=127.0.0.1
       - CELERY_BROKER_URL=redis://127.0.0.1:6379/0
       - DISPATCHARR_LOG_LEVEL=info
-
     stop_grace_period: 15s
